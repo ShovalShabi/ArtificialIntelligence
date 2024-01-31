@@ -1,4 +1,0 @@
-﻿  main.cpp
-C:\Users\VictorT\Downloads\BFS\Graphics\Graphics\main.cpp(37,12): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
-C:\Users\VictorT\Downloads\BFS\Graphics\Graphics\main.cpp(315,1): warning C4326: return type of 'main' should be 'int' instead of 'void'
-  Graphics.vcxproj -> C:\Users\VictorT\Downloads\BFS\Graphics\Debug\Graphics.exe
