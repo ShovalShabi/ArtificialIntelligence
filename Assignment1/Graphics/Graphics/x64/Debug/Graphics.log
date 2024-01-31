@@ -1,0 +1,9 @@
+﻿  Cell.cpp
+  GameManager.cpp
+  main.cpp
+C:\Users\shova\OneDrive\Desktop\ArtificialIntelligence\Assignment1\Graphics\Graphics\GameManager.cpp(1,10): error C1083: Cannot open include file: 'GameManger.h': No such file or directory
+C:\Users\shova\OneDrive\Desktop\ArtificialIntelligence\Assignment1\Graphics\Graphics\main.cpp(37,12): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+  MazeManager.cpp
+C:\Users\shova\OneDrive\Desktop\ArtificialIntelligence\Assignment1\Graphics\Graphics\MazeManager.cpp(52,12): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+C:\Users\shova\OneDrive\Desktop\ArtificialIntelligence\Assignment1\Graphics\Graphics\MazeManager.cpp(121,3): error C2065: 'grays': undeclared identifier
+  Generating Code...
