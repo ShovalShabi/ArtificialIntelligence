@@ -3,8 +3,45 @@
 #include <stdlib.h>
 #include "Cell.h"
 #include "GameManager.h"
+#include "glut.h"
+#include "Cell.h"
+#include <iostream>
 
-void MazeManager::initMaze(GameManager gameManger)
+MazeManager::MazeManager() {
+	this->maze = new int* [MSZ];
+	for (int i = 0; i < MSZ; ++i) {
+		this->maze[i] = new int[MSZ];
+	}
+
+	// Initialize maze elements
+	for (int i = 0; i < MSZ; ++i) {
+		for (int j = 0; j < MSZ; ++j) {
+			this->maze[i][j] = 0;
+		}
+	}
+	this->start = NULL;
+	this->target = NULL;
+
+}
+
+MazeManager::~MazeManager() {
+	for (int i = 0; i < MSZ; ++i) {
+		delete[] this->maze[i];
+	}
+	delete[] this->maze;
+}
+
+void MazeManager::init(GameManager* gameManager)
+{
+	glClearColor(0.5, 0.5, 0.5, 0);// color of window background
+	glOrtho(0, MSZ, 0, MSZ, -1, 1); // set the coordinates system
+
+	srand(time(0));
+
+	this->initMaze(gameManager);
+}
+
+void MazeManager::initMaze(GameManager* gameManager)
 {
 	int i, j;
 
@@ -34,24 +71,18 @@ void MazeManager::initMaze(GameManager gameManger)
 					maze[i][j] = WALL;
 			}
 		}
-	start = new Cell(MSZ / 2, MSZ / 2, nullptr);
+	Cell* start = new Cell(MSZ / 2, MSZ / 2, nullptr);
 	maze[start->getRow()][start->getCol()] = START;
-	target = new Cell(rand() % MSZ, rand() % MSZ, nullptr);
+	Cell* target = new Cell(rand() % MSZ, rand() % MSZ, nullptr);
 	maze[target->getRow()][target->getCol()] = TARGET;
 
-	gameManger.getBfsGrays().push(start); // insert first cell to grays
-	gameManger.getDfsGrays().push_back(start); // insert first cell to grays
-	gameManger.getBiBfsGrays().push(start);
-}
+	gameManager->getBfsGrays().push(start); // insert first cell to grays
+	gameManager->getDfsGrays().push_back(start); // insert first cell to grays
+	gameManager->getBiBfsGrays().push(target); // insert the target cell to grays
 
-void MazeManager::init(GameManager gameManager)
-{
-	glClearColor(0.5, 0.5, 0.5, 0);// color of window background
-	glOrtho(0, MSZ, 0, MSZ, -1, 1); // set the coordinates system
+	std::cout << "Start Cell: Row " << start->getRow() << ", Col " << start->getCol() << std::endl;
+	std::cout << "Target Cell: Row " << target->getRow() << ", Col " << target->getCol() << std::endl;
 
-	srand(time(0));
-
-	this->initMaze(gameManager);
 }
 
 void MazeManager::drawMaze()
@@ -96,30 +127,38 @@ void MazeManager::drawMaze()
 		}
 }
 
-
-void MazeManager::restorePath(Cell* pc)
+// drawings are here
+void  MazeManager::display()
 {
-	while (pc != nullptr)
-	{
-		maze[pc->getRow()][pc->getCol()] = PATH;
-		pc = pc->getParent();
-	}
+	glClear(GL_COLOR_BUFFER_BIT); // clean frame buffer with background color
+
+	drawMaze();
+
+	glutSwapBuffers(); // show all
 }
 
-bool MazeManager::checkNeighbour(int row, int col, Cell* pCurrent)
+void MazeManager::idle(GameManager* gameManager)
 {
-	Cell* pn = nullptr;
-	if (maze[row][col] == TARGET)
-	{
-		runBFS = false;
-		this->restorePath(pCurrent);
-		return false;
+
+	if (this->getRunBFS())
+		gameManager->runIteration(maze, BFS_OPT, TARGET);
+	if (this->getRunDFS())
+		gameManager->runIteration(maze, DFS_OPT, TARGET);
+	if (this->getRunBiBfs()) {
+		gameManager->runIteration(maze, BIBFS_OPT, START);
 	}
-	else // must be "White Neighbour" - SPACE
-	{
-		pn = new Cell(row, col, pCurrent); // create new Cell
-		grays.push(pn);
-		maze[row][col] = GRAY;
-		return true; // go_on = true
+
+	glutPostRedisplay(); // call to display indirectly
+}
+
+void  MazeManager::menu(int choice)
+{
+	if (choice == BFS_OPT) // BFS
+		this->setRunBFS(true);
+	if (choice == DFS_OPT) // DFS
+		this->setRunDFS(true);
+	if (choice == BIBFS_OPT) {	// BiBFS
+		this->setRunBiBFS(true);
+		this->setRunBFS(true);
 	}
 }

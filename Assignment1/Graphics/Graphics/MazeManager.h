@@ -1,18 +1,6 @@
 #pragma once
-#define MSZ 100
-#define SPACE 0
-#define WALL 1
-#define START 2
-#define TARGET 3
-#define GRAY 4
-#define BLACK 5
-#define PATH 6
-#define DIRECTION 4
-
-#include "glut.h"
-#include "Cell.h"
-#include <iostream>
 #include "GameManager.h"
+#include "constants.h"
 
 
 class MazeManager
@@ -27,22 +15,28 @@ private:
 
 public:
 
-	MazeManager() {
-		this->maze[MSZ][MSZ] = { 0 };
-		this->start = NULL;
-		this->target = NULL;
+	MazeManager();
 
-	}
+	~MazeManager();
 
-	void initMaze(GameManager gameManger);
 
-	void init(GameManager gameManager);
+	bool getRunBFS() { return runBFS; }
+	bool getRunDFS() { return runDFS; }
+	bool getRunBiBfs() { return runBiBFS; }
+	void setRunBFS(bool change) { runBFS = change; }
+	void setRunDFS(bool change) { runDFS = change; }
+	void setRunBiBFS(bool change) { runBiBFS = change; }
+
+	void initMaze(GameManager* gameManger);
+
+	void init(GameManager* gameManager);
 
 	void drawMaze();
 
-	void restorePath(Cell* pc);
+	void display();
 
-	bool checkNeighbour(int row, int col, Cell* pCurrent);
+	void idle(GameManager *gameManager);
 
+	void menu(int choice);
 };
 
