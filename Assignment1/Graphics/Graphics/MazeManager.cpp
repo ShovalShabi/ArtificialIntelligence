@@ -80,6 +80,9 @@ void MazeManager::initMaze(GameManager* gameManager)
 	gameManager->getDfsGrays().push_back(start); // insert first cell to grays
 	gameManager->getBiBfsGrays().push(target); // insert the target cell to grays
 
+	gameManager->setStartCell(start);
+	gameManager->setTargetCell(target);
+
 	std::cout << "Start Cell: Row " << start->getRow() << ", Col " << start->getCol() << std::endl;
 	std::cout << "Target Cell: Row " << target->getRow() << ", Col " << target->getCol() << std::endl;
 
@@ -92,28 +95,43 @@ void MazeManager::drawMaze()
 	for (i = 0; i < MSZ; i++)
 		for (j = 0; j < MSZ; j++)
 		{
-			switch (maze[i][j]) // set convinient color of a cell
+			switch (maze[i][j]) // set convenient color of a cell
 			{
 			case SPACE:
-				glColor3d(1, 1, 1); // white
+				// White
+				glColor3d(1, 1, 1);
 				break;
 			case WALL:
-				glColor3d(0, 0, 0); // black
+				// Black
+				glColor3d(0, 0, 0);
 				break;
 			case START:
-				glColor3d(0.5, 0.5, 1); // blue
+				// Light Blue
+				glColor3d(0.5, 0.5, 1);
 				break;
 			case TARGET:
-				glColor3d(1, 0, 0); // red
+				// Red
+				glColor3d(1, 0, 0);
 				break;
-			case GRAY:
-				glColor3d(1, 0.7, 0); // orange
+			case ORANGE:
+				// Orange
+				glColor3d(1, 0.7, 0);
 				break;
-			case BLACK:
-				glColor3d(0.8, 1, 0.8); // green
+			case VISITED:
+				// Light Green
+				glColor3d(0.8, 1, 0.8);
+				break;
+			case BRONZE:
+				//Bronze
+				glColor3f(0.1f, 0.1f, 0.0f);
+				break;
+			case VIOLET:
+				//Dark Blue
+				glColor3f(0.5f, 0.5f, 0.5f);
 				break;
 			case PATH:
-				glColor3d(1, 0, 1); // magenta
+				// Magenta
+				glColor3d(1, 0, 1);
 				break;
 
 			}// switch
@@ -127,6 +145,7 @@ void MazeManager::drawMaze()
 		}
 }
 
+
 // drawings are here
 void  MazeManager::display()
 {
@@ -137,32 +156,32 @@ void  MazeManager::display()
 	glutSwapBuffers(); // show all
 }
 
-/// <summary>
-/// Need to fix here the continuinty
-/// </summary>
-/// <param name="gameManager"></param>
 void MazeManager::idle(GameManager* gameManager)
 {
+	//std::cout << "Before Iteration - BFS: " << gameManager->getRunBFS() << ", DFS: " << gameManager->getRunDFS() << ", BiBFS: " << gameManager->getRunBiBFS() << std::endl;
 
-	if (this->getRunBFS())
+	if (gameManager->getRunBFS())
 		gameManager->runIteration(maze, BFS_OPT, TARGET);
-	if (this->getRunDFS())
+	if (gameManager->getRunDFS())
 		gameManager->runIteration(maze, DFS_OPT, TARGET);
-	if (this->getRunBiBfs()) {
+	if (gameManager->getRunBiBFS()) {
 		gameManager->runIteration(maze, BIBFS_OPT, START);
 	}
+
+	//std::cout << "After Iteration - BFS: " << gameManager->getRunBFS() << ", DFS: " << gameManager->getRunDFS() << ", BiBFS: " << gameManager->getRunBiBFS() << std::endl;
 
 	glutPostRedisplay(); // call to display indirectly
 }
 
-void  MazeManager::menu(int choice)
+
+void  MazeManager::menu(int choice, GameManager* gameManager)
 {
 	if (choice == BFS_OPT) // BFS
-		this->setRunBFS(true);
+		gameManager->setRunBFS(true);
 	if (choice == DFS_OPT) // DFS
-		this->setRunDFS(true);
+		gameManager->setRunDFS(true);
 	if (choice == BIBFS_OPT) {	// BiBFS
-		this->setRunBiBFS(true);
-		this->setRunBFS(true);
+		gameManager->setRunBiBFS(true);
+		gameManager->setRunBFS(true);
 	}
 }

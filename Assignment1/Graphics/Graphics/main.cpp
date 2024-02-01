@@ -14,7 +14,7 @@ void idleWrapper() {
 }
 
 void menuWrapper(int choice) {
-    mazeMng->menu(choice);
+    mazeMng->menu(choice, gameMng);
 }
 
 int main(int argc, char* argv[]) {
