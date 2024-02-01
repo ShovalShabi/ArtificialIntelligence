@@ -82,7 +82,20 @@ void GameManager::runIteration(int** maze, int typeAlgo, int targetMark)
 
 	if (isEmpty)
 	{
-		runDFS = false;
+		switch (typeAlgo)
+		{
+		case BFS_OPT:
+			this->setRunBFS(false);
+			break;
+		case DFS_OPT:
+			this->setRunDFS(false);
+			break;
+		case BIBFS_OPT:
+			this->setRunBiBFS(false);
+			break;
+		default:
+			break;
+		}
 		cout << "Grays are empty. There is no solution\n";
 		return;
 	}

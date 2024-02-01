@@ -137,6 +137,10 @@ void  MazeManager::display()
 	glutSwapBuffers(); // show all
 }
 
+/// <summary>
+/// Need to fix here the continuinty
+/// </summary>
+/// <param name="gameManager"></param>
 void MazeManager::idle(GameManager* gameManager)
 {
 
