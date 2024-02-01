@@ -18,7 +18,7 @@ void GameManager::RestorePath(Cell* pc, int** maze)
 }
 
 // DFS a cell on row,col can be either WHITE or TARGET
-bool GameManager::CheckNeighbourGenerically(int row, int col, Cell* pCurrent,int** maze ,int targetMark, int typeAlgo)
+bool GameManager::CheckNeighbourGenerically(int row, int col, Cell* pCurrent, int** maze, int targetMark, int typeAlgo)
 {
 	Cell* pn = nullptr;
 	if (maze[row][col] == targetMark || (typeAlgo == BIBFS_OPT && (maze[row][col] == VISITED || maze[row][col] == START || maze[row][col] == ORANGE)))
@@ -38,7 +38,7 @@ bool GameManager::CheckNeighbourGenerically(int row, int col, Cell* pCurrent,int
 		default:
 			break;
 		}
-		RestorePath(pCurrent,maze);
+		RestorePath(pCurrent, maze);
 
 		std::cout << "Met in Position: Row " << row << ", Col " << col << std::endl;
 
@@ -47,7 +47,7 @@ bool GameManager::CheckNeighbourGenerically(int row, int col, Cell* pCurrent,int
 			Cell* cell = bfsGrays.front();
 			bfsGrays.pop();
 
-			while(cell != nullptr) {
+			while (cell != nullptr) {
 				if (cell->getCol() == col && cell->getRow() == row) {
 					RestorePath(cell, maze);
 					return false;
@@ -74,7 +74,7 @@ bool GameManager::CheckNeighbourGenerically(int row, int col, Cell* pCurrent,int
 		default:
 			break;
 		}
-		if(typeAlgo != BIBFS_OPT)
+		if (typeAlgo != BIBFS_OPT)
 			maze[row][col] = ORANGE;
 		else
 			maze[row][col] = VIOLET;
@@ -146,7 +146,7 @@ void GameManager::runIteration(int** maze, int typeAlgo, int targetMark)
 		}
 
 		// paint it as visted
-		if (maze[pc->getRow()][pc->getCol()] != START && typeAlgo != BIBFS_OPT) 
+		if (maze[pc->getRow()][pc->getCol()] != START && typeAlgo != BIBFS_OPT)
 			maze[pc->getRow()][pc->getCol()] = VISITED;
 		else if (maze[pc->getRow()][pc->getCol()] != TARGET && typeAlgo == BIBFS_OPT)
 			maze[pc->getRow()][pc->getCol()] = BRONZE;
@@ -198,7 +198,7 @@ void GameManager::runIteration(int** maze, int typeAlgo, int targetMark)
 			if (row + 1 < MSZ && (maze[row + 1][col] == SPACE || maze[row + 1][col] == targetMark || (typeAlgo == BIBFS_OPT && (maze[row + 1][col] == VISITED || maze[row + 1][col] == ORANGE))))
 				go_on = CheckNeighbourGenerically(row + 1, col, pc, maze, targetMark, typeAlgo);
 			// down
-			if (row - 1 > 0 && go_on && (maze[row - 1][col] == SPACE || maze[row - 1][col] == targetMark || (typeAlgo == BIBFS_OPT && (maze[row-1][col] == VISITED || maze[row - 1][col] == ORANGE))))
+			if (row - 1 > 0 && go_on && (maze[row - 1][col] == SPACE || maze[row - 1][col] == targetMark || (typeAlgo == BIBFS_OPT && (maze[row - 1][col] == VISITED || maze[row - 1][col] == ORANGE))))
 				go_on = CheckNeighbourGenerically(row - 1, col, pc, maze, targetMark, typeAlgo);
 			// left
 			if (col - 1 > 0 && go_on && (maze[row][col - 1] == SPACE || maze[row][col - 1] == targetMark || (typeAlgo == BIBFS_OPT && (maze[row][col - 1] == VISITED || maze[row][col - 1] == ORANGE))))

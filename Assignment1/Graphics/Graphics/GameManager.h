@@ -25,7 +25,7 @@ public:
 	bool getRunBFS() { return runBFS; }
 	bool getRunDFS() { return runDFS; }
 	bool getRunBiBFS() { return runBiBFS; }
-	void setRunBFS(bool change) {runBFS=change; }
+	void setRunBFS(bool change) { runBFS = change; }
 	void setRunDFS(bool change) { runDFS = change; }
 	void setRunBiBFS(bool change) { runBiBFS = change; }
 	Cell* getStartCell() { return startCell; }

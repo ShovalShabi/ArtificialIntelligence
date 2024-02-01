@@ -24,7 +24,7 @@ public:
 
 	void display();
 
-	void idle(GameManager *gameManager);
+	void idle(GameManager* gameManager);
 
 	void menu(int choice, GameManager* gameManager);
 
