@@ -1,0 +1,20 @@
+#pragma once
+#define MSZ 100
+#define SPACE 0
+#define WALL 1
+#define START 2
+#define TARGET 3
+#define ORANGE 4
+#define VISITED 5
+#define PATH 6
+#define BRONZE 7
+#define VIOLET 8 
+#define DIRECTION 4
+#define UP 0
+#define DOWN 1
+#define LEFT 2
+#define RIGHT 3
+#define BFS_OPT 1
+#define DFS_OPT 2
+#define BEST_FIRST_SERACH_OPT 3
+#define A_STAR_OPT 4
