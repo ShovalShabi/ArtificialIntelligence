@@ -16,6 +16,6 @@ public:
 	int getRow() { return row; }
 	int getColumn() { return column; }
 	double getDistanceToTarget() { return distance; }
-	Cell* getParent() { return parent; }
+	Cell*& getParent() { return parent; }
 };
 
