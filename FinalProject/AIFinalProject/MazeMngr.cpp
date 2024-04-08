@@ -207,7 +207,7 @@ void MazeMngr::idle(GameMngr* gameMngr)
 	if (gameMngr->getRunPackman())
 		gameMngr->runPacmanGame(maze);
 
-	this_thread::sleep_for(chrono::milliseconds(500)); // Adjust the delay time as needed
+	this_thread::sleep_for(chrono::milliseconds(250)); // Adjust the delay time as needed
 
 
 	glutPostRedisplay(); // indirect call to display

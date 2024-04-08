@@ -28,7 +28,7 @@ GameMngr::GameMngr(int numCoins)
 	this->ghostsList = vector<Cell*>();
 }
 
-void GameMngr::RestorePacmanPath(Cell* pc, Cell*& pacman, int ** maze)
+void GameMngr::RestorePacmanPath(Cell* pc, Cell*& pacman, int** maze)
 {
 	double distanceBetweenPacmanToPc = GetDistanceBetweenTwoDots(pc->getRow(), pc->getColumn(), pacman->getRow(), pacman->getColumn());
 	while (distanceBetweenPacmanToPc > 1) // iterate over path to next coin until next move of pacman
@@ -84,7 +84,7 @@ void GameMngr::runPacmanGame(int** maze)
 	{
 		if (coinsLeft > 0)
 		{
-			GhostsIteration(pacman,maze);
+			GhostsIteration(pacman, maze);
 			pacmanIteration(pacman, maze, ghostsList, pacmanGrays);
 		}
 		else
@@ -326,6 +326,7 @@ void GameMngr::GhostsIteration(Cell* pacman, int** maze)
 		else
 		{
 			justMove(ghostsList[i], maze);
+			//cout << "Ghost number " << i << " just moved and now is at [" << ghostsList[i]->getRow() << "][" << ghostsList[i]->getColumn() << "]" << endl;
 		}
 	}
 
@@ -334,7 +335,7 @@ void GameMngr::GhostsIteration(Cell* pacman, int** maze)
 }
 
 // function to move any stuck monster on o
-void GameMngr::justMove(Cell*& pc, int ** maze) {
+void GameMngr::justMove(Cell*& pc, int** maze) {
 	int r = pc->getRow(), c = pc->getColumn();
 	// Move the monster the the open space	
 	// UP
@@ -412,7 +413,7 @@ void GameMngr::GhostIteration(int indexGhost, Cell* pacman, int** maze)
 	}
 }
 
-void GameMngr::CheckNeighborForGhost(int row, int column, Cell*& pcurrent, Cell*& ghost, int indexGhost, Cell* pacman, int** maze)
+void GameMngr::CheckNeighborForGhost(int row, int column, Cell* pcurrent, Cell*& ghost, int indexGhost, Cell* pacman, int** maze)
 {
 	if (maze[row][column] == PACMAN) // if found root to the pacman -> restore path to WHITE and move the monster 3 step
 	{
@@ -430,7 +431,7 @@ void GameMngr::CheckNeighborForGhost(int row, int column, Cell*& pcurrent, Cell*
 	}
 }
 
-void GameMngr::RestorePathForGhost(Cell*& pc, Cell*& ghost, int indexGhost, int** maze, Cell* pacman)
+void GameMngr::RestorePathForGhost(Cell* pc, Cell*& ghost, int indexGhost, int** maze, Cell* pacman)
 {
 	while (pc->getParent() != ghost) // all path return to be SPACE instead of gray
 	{
@@ -438,10 +439,12 @@ void GameMngr::RestorePathForGhost(Cell*& pc, Cell*& ghost, int indexGhost, int*
 	}
 	maze[ghost->getRow()][ghost->getColumn()] = SPACE; // remove old location of monster3
 	double distanceToPacMan = GetDistanceBetweenTwoDots(pc->getRow(), pc->getColumn(), pacman->getRow(), pacman->getColumn());
+	cout << "Ghost number " << indexGhost << " before restore path [" << ghostsList[indexGhost]->getRow() << "][" << ghostsList[indexGhost]->getColumn() << "] for cell ["<<pc->getRow()<<"]["<<pc->getColumn()<<"]" << endl;
 	ghost = pc;
 	ghost->setRow(pc->getRow());
 	ghost->setCol(pc->getColumn());
 	maze[ghost->getRow()][ghost->getColumn()] = GHOST;
+	cout << "Ghost number " << indexGhost << " restored path and now is at [" << ghostsList[indexGhost]->getRow() << "][" << ghostsList[indexGhost]->getColumn() << "]" << endl;
 	Cell* cell;
 	while (!listOfPriorityQueues[indexGhost].empty())
 	{

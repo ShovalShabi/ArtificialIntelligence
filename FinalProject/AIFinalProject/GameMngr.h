@@ -82,7 +82,7 @@ public:
 	void GhostsIteration(Cell* pacman, int** maze);
 	void justMove(Cell*& pc, int** maze);
 	void GhostIteration(int indexGhost, Cell* pacman, int** maze);
-	void CheckNeighborForGhost(int row, int column, Cell*& pcurrent, Cell*& ghost, int indexGhost, Cell* pacman, int** maze);
-	void RestorePathForGhost(Cell*& pc, Cell*& ghost, int indexGhost, int** maze, Cell* pacman);
+	void CheckNeighborForGhost(int row, int column, Cell* pcurrent, Cell*& ghost, int indexGhost, Cell* pacman, int** maze);
+	void RestorePathForGhost(Cell* pc, Cell*& ghost, int indexGhost, int** maze, Cell* pacman);
 	double GetDistanceBetweenTwoDots(int x1, int y1, int x2, int y2);
 };
