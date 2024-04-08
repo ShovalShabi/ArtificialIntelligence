@@ -82,8 +82,8 @@ void RestorePacmanPath(Cell* pc, Cell*& packman);
 
 void init()
 {
-	srand(time(0));
-	glClearColor(0, 0.3, 0.0, 0);// color of window background
+	srand((unsigned int)time(NULL));
+	glClearColor((GLclampf)0, (GLclampf)0.3, (GLclampf)0.0, (GLclampf)0);
 	glOrtho(0, MSZ, 0, MSZ, -1, 1); // set the coordinates system
 
 	InitMaze(packman);
