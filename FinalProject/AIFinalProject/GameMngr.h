@@ -73,7 +73,7 @@ public:
 	GameMngr(int numCoins);
 	void RestorePacmanPath(Cell* pc, Cell*& pacman, int** maze);
 	void CheckPacmanNeighbor(int row, int column, Cell* pcurrent, Cell*& pacman, int** maze);
-	void clearMaze(int** maze);
+	void updateMaze(int** maze);
 	void runPacmanGame(int** maze);
 	void pacmanIteration(Cell*& pacman, int** maze, vector<Cell*> ghostsList, vector<Cell*>& pacmanGrays);
 	void collectCoin(int r, int c, int** maze);

@@ -42,7 +42,7 @@ void GameMngr::RestorePacmanPath(Cell* pc, Cell*& pacman, int** maze)
 	pacman->setRow(pc->getRow());
 	pacman->setColumn(pc->getColumn());
 	PackmanNeedToMove = false; // bool flag of pacman movement set to false
-	clearMaze(maze);
+	updateMaze(maze);
 }
 
 
@@ -61,7 +61,7 @@ void GameMngr::CheckPacmanNeighbor(int row, int column, Cell* pcurrent, Cell*& p
 	}
 }
 
-void GameMngr::clearMaze(int** maze) {
+void GameMngr::updateMaze(int** maze) {
 	for (int i = 1; i < MSZ - 1; i++)
 	{
 		for (int j = 1; j < MSZ - 1; j++)
@@ -127,7 +127,7 @@ void GameMngr::pacmanIteration(Cell*& pacman, int** maze, vector<Cell*> ghostsLi
 	if (minDistance <= PROXIMITY)
 	{
 		PacmanRunAwayGhost(pacman, ghostsList[indexClosestGhost], maze);
-		clearMaze(maze);
+		updateMaze(maze);
 		MonstersTurn = true;
 		PacmanTurn = false;
 		return; // move one step away and finish turn
@@ -145,7 +145,7 @@ void GameMngr::pacmanIteration(Cell*& pacman, int** maze, vector<Cell*> ghostsLi
 		pacman->setRow(pacR + 1);
 		pacman->setColumn(pacC);
 		maze[pacR + 1][pacC] = PACMAN;
-		clearMaze(maze);
+		updateMaze(maze);
 		MonstersTurn = true;
 		PacmanTurn = false;
 		return;
@@ -158,7 +158,7 @@ void GameMngr::pacmanIteration(Cell*& pacman, int** maze, vector<Cell*> ghostsLi
 		pacman->setRow(pacR - 1);
 		pacman->setColumn(pacC);
 		maze[pacR - 1][pacC] = PACMAN;
-		clearMaze(maze);
+		updateMaze(maze);
 		MonstersTurn = true;
 		PacmanTurn = false;
 		return;
@@ -171,7 +171,7 @@ void GameMngr::pacmanIteration(Cell*& pacman, int** maze, vector<Cell*> ghostsLi
 		pacman->setRow(pacR);
 		pacman->setColumn(pacC + 1);
 		maze[pacR][pacC + 1] = PACMAN;
-		clearMaze(maze);
+		updateMaze(maze);
 		MonstersTurn = true;
 		PacmanTurn = false;
 		return;
@@ -184,7 +184,7 @@ void GameMngr::pacmanIteration(Cell*& pacman, int** maze, vector<Cell*> ghostsLi
 		pacman->setRow(pacR);
 		pacman->setColumn(pacC - 1);
 		maze[pacR][pacC - 1] = PACMAN;
-		clearMaze(maze);
+		updateMaze(maze);
 		MonstersTurn = true;
 		PacmanTurn = false;
 		return;
@@ -229,7 +229,7 @@ void GameMngr::RunPacmanBFS(Cell*& pacman, int** maze, vector<Cell*>& pacmanGray
 				cout << "Pacman cannot reach more coins (blocked with walls)! Game Over!\n";
 				*PackmanNeedToMove = false;
 				*runPackman = false;
-				clearMaze(maze);
+				updateMaze(maze);
 				maze[pacman->getRow()][pacman->getColumn()] = PACMAN;
 				return;
 			}
@@ -291,7 +291,7 @@ void GameMngr::PacmanRunAwayGhost(Cell*& pacman, Cell* ghost, int** maze)
 		maze[cellPointers[maxDistIndex]->getRow()][cellPointers[maxDistIndex]->getColumn()] = PACMAN; // updating the actual postion of pacman on board
 		pacman->setRow(cellPointers[maxDistIndex]->getRow()); //updating the pacman object row position
 		pacman->setColumn(cellPointers[maxDistIndex]->getColumn());  //updating the pacman object column position
-		clearMaze(maze);
+		updateMaze(maze);
 	}
 }
 
@@ -377,7 +377,7 @@ void GameMngr::GhostIteration(int indexGhost, Cell* pacman, int** maze)
 				ghostStuckList[indexGhost] = true;// the ghost doesn't have path to packaman
 				ghostFoundPathList[indexGhost] = false;// the ghost doesn't have path to packaman
 				ghostNeedToMoveList[indexGhost] = false; // Stopping the ghost movement
-				clearMaze(maze);
+				updateMaze(maze);
 				return;
 			}
 			else // grays is not empty
@@ -443,7 +443,7 @@ void GameMngr::RestorePathForGhost(Cell* pc, Cell*& ghost, int indexGhost, int**
 	}
 	listOfPriorityQueues[indexGhost].push(ghost);
 	ghostNeedToMoveList[indexGhost] = false;
-	clearMaze(maze);
+	updateMaze(maze);
 }
 
 // get distance between two dots
