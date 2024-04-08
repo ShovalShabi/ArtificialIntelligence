@@ -18,4 +18,3 @@ public:
 	double getDistanceToTarget() { return distance; }
 	Cell*& getParent() { return parent; }
 };
-

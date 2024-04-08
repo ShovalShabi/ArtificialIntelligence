@@ -54,17 +54,20 @@
     <ClInclude Include="..\..\..\..\..\Downloads\SaarGamzo_HW3\HW3_Pacman_SaarGamzo\Graphics\Graphics\CompareCellsWithDistance.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Assignment2\Graphics\Graphics\GameManager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Assignment2\Graphics\Graphics\MazeManager.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="..\..\..\..\..\Downloads\SaarGamzo_HW3\HW3_Pacman_SaarGamzo\Graphics\Graphics\glut.h">
+      <Filter>Resource Files</Filter>
     </ClInclude>
     <ClInclude Include="Cell.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\Downloads\SaarGamzo_HW3\HW3_Pacman_SaarGamzo\Graphics\Graphics\glut.h">
-      <Filter>Resource Files</Filter>
+    <ClInclude Include="GameMngr.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneralConsts.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MazeMngr.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -92,16 +95,16 @@
     <ClCompile Include="..\..\..\..\..\Downloads\SaarGamzo_HW3\HW3_Pacman_SaarGamzo\Graphics\Graphics\CompareCellsWithDistance.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Assignment2\Graphics\Graphics\GameManager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Assignment2\Graphics\Graphics\MazeManager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Cell.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GameMngr.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MazeMngr.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

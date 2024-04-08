@@ -76,6 +76,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <DisableAnalyzeExternal>false</DisableAnalyzeExternal>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -141,9 +142,10 @@
     <ClInclude Include="..\..\..\..\..\Downloads\FSM\Graphics\Graphics\wglew.h" />
     <ClInclude Include="..\..\..\..\..\Downloads\SaarGamzo_HW3\HW3_Pacman_SaarGamzo\Graphics\Graphics\CompareCellsWithDistance.h" />
     <ClInclude Include="..\..\..\..\..\Downloads\SaarGamzo_HW3\HW3_Pacman_SaarGamzo\Graphics\Graphics\glut.h" />
-    <ClInclude Include="..\..\Assignment2\Graphics\Graphics\GameManager.h" />
-    <ClInclude Include="..\..\Assignment2\Graphics\Graphics\MazeManager.h" />
     <ClInclude Include="Cell.h" />
+    <ClInclude Include="GameMngr.h" />
+    <ClInclude Include="GeneralConsts.h" />
+    <ClInclude Include="MazeMngr.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\..\..\Downloads\FSM\Graphics\Graphics\ChoppingTrees.cpp" />
@@ -154,10 +156,10 @@
     <ClCompile Include="..\..\..\..\..\Downloads\FSM\Graphics\Graphics\NPC.cpp" />
     <ClCompile Include="..\..\..\..\..\Downloads\FSM\Graphics\Graphics\State.cpp" />
     <ClCompile Include="..\..\..\..\..\Downloads\SaarGamzo_HW3\HW3_Pacman_SaarGamzo\Graphics\Graphics\CompareCellsWithDistance.cpp" />
-    <ClCompile Include="..\..\Assignment2\Graphics\Graphics\GameManager.cpp" />
-    <ClCompile Include="..\..\Assignment2\Graphics\Graphics\MazeManager.cpp" />
     <ClCompile Include="Cell.cpp" />
+    <ClCompile Include="GameMngr.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="MazeMngr.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="..\..\..\..\..\Downloads\FSM\Graphics\Graphics\freeglut.lib" />
