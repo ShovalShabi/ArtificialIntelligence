@@ -76,7 +76,7 @@ public:
 	void clearMaze(int** maze);
 	void runPacmanGame(int** maze);
 	void pacmanIteration(Cell*& pacman, int** maze, vector<Cell*> ghostsList, vector<Cell*>& pacmanGrays);
-	void checkIfCoin(int r, int c, int** maze);
+	void collectCoin(int r, int c, int** maze);
 	void RunPacmanBFS(Cell*& pacman, int** maze, vector<Cell*>& pacmanGrays, bool* PackmanNeedToMove, bool* runPackman);
 	void PacmanRunAwayGhost(Cell*& pacman, Cell* ghost, int** maze);
 	void GhostsIteration(Cell* pacman, int** maze);
