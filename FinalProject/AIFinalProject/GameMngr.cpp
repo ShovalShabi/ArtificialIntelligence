@@ -1,4 +1,5 @@
 #include "GameMngr.h"
+#include "PacmanCollectCoinsState.h"
 #include <iostream>
 #include <math.h>
 
@@ -17,7 +18,10 @@ GameMngr::GameMngr(int numCoins)
 	this->coinsLeft = numCoins;
 	this->coinsCounter = 0;
 	this->runPacmanBFS = false;
-	this->PackmanNeedToMove = true;
+	this->packmanNeedToCollectCoins = true;
+	this->packmanRunFromGhosts = false;
+	this->currentState = new PacmanCollectCoinsState();
+	this->currentState->OnEnter(this);
 
 	this->pacmanGrays = vector<Cell*>();
 	this->listOfPriorityQueues = vector<priority_queue<Cell*, vector<Cell*>, CompareCellsWithDistance>>();
@@ -158,8 +162,8 @@ void GameMngr::pacmanIteration(Cell* pacman, int** maze, vector<Cell*> ghostsLis
 		return;
 	}
 	// if coins are further than 1 step - start BFS & move one step to first coin pacman found:
-	PackmanNeedToMove = true;
-	RunPacmanBFS(pacman, maze, pacmanGrays, &PackmanNeedToMove, &runPackman);
+	packmanNeedToCollectCoins = true;
+	RunPacmanBFS(pacman, maze, pacmanGrays, &packmanNeedToCollectCoins, &runPackman);
 
 	MonstersTurn = true;
 	PacmanTurn = false;
@@ -183,19 +187,19 @@ void GameMngr::collectCoin(int r, int c, int** maze)
 	}
 }
 
-void GameMngr::RunPacmanBFS(Cell* pacman, int** maze, vector<Cell*>& pacmanGrays, bool* PackmanNeedToMove, bool* runPackman)
+void GameMngr::RunPacmanBFS(Cell* pacman, int** maze, vector<Cell*>& pacmanGrays, bool* packmanNeedToCollectCoins, bool* runPackman)
 {
 	pacmanGrays.push_back(pacman);
-	while (*PackmanNeedToMove)
+	while (*packmanNeedToCollectCoins)
 	{
 		Cell* pcurrent;
 		int r, c;
-		if (*PackmanNeedToMove)
+		if (*packmanNeedToCollectCoins)
 		{
 			if (pacmanGrays.empty()) // no solution exists
 			{
 				cout << "Pacman cannot reach more coins (blocked with walls)! Game Over!\n";
-				*PackmanNeedToMove = false;
+				*packmanNeedToCollectCoins = false;
 				*runPackman = false;
 				updateMaze(maze);
 				maze[pacman->getRow()][pacman->getColumn()] = PACMAN;
@@ -211,16 +215,16 @@ void GameMngr::RunPacmanBFS(Cell* pacman, int** maze, vector<Cell*>& pacmanGrays
 				// add all white neighbors of pcurrent to grays
 				// Pacman ignores the GRAY mark of the ghosts and continues to explore path
 				// UP
-				if (*PackmanNeedToMove && (maze[r + 1][c] == SPACE || maze[r + 1][c] == COIN || maze[r + 1][c] == GRAY || maze[r + 1][c] == GHOST))
+				if (*packmanNeedToCollectCoins && (maze[r + 1][c] == SPACE || maze[r + 1][c] == COIN || maze[r + 1][c] == GRAY || maze[r + 1][c] == GHOST))
 					CheckPacmanNeighbor(r + 1, c, pcurrent, pacman, maze);
 				// DOWN
-				if (*PackmanNeedToMove && (maze[r - 1][c] == SPACE || maze[r - 1][c] == COIN || maze[r - 1][c] == GRAY || maze[r - 1][c] == GHOST))
+				if (*packmanNeedToCollectCoins && (maze[r - 1][c] == SPACE || maze[r - 1][c] == COIN || maze[r - 1][c] == GRAY || maze[r - 1][c] == GHOST))
 					CheckPacmanNeighbor(r - 1, c, pcurrent, pacman, maze);
 				// LEFT
-				if (*PackmanNeedToMove && (maze[r][c - 1] == SPACE || maze[r][c - 1] == COIN || maze[r][c - 1] == GRAY || maze[r][c - 1] == GHOST))
+				if (*packmanNeedToCollectCoins && (maze[r][c - 1] == SPACE || maze[r][c - 1] == COIN || maze[r][c - 1] == GRAY || maze[r][c - 1] == GHOST))
 					CheckPacmanNeighbor(r, c - 1, pcurrent, pacman, maze);
 				// RIGHT
-				if (*PackmanNeedToMove && (maze[r][c + 1] == SPACE || maze[r][c + 1] == COIN || maze[r][c + 1] == GRAY || maze[r][c + 1] == GHOST))
+				if (*packmanNeedToCollectCoins && (maze[r][c + 1] == SPACE || maze[r][c + 1] == COIN || maze[r][c + 1] == GRAY || maze[r][c + 1] == GHOST))
 					CheckPacmanNeighbor(r, c + 1, pcurrent, pacman, maze);
 			}
 		}
@@ -242,7 +246,7 @@ void GameMngr::RestorePacmanPath(Cell* pc, Cell* pacman, int** maze)
 	maze[pc->getRow()][pc->getColumn()] = PACMAN;
 	pacman->setRow(pc->getRow());
 	pacman->setColumn(pc->getColumn());
-	PackmanNeedToMove = false; // bool flag of pacman movement set to false
+	packmanNeedToCollectCoins = false; // bool flag of pacman movement set to false
 	updateMaze(maze);
 }
 

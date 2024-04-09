@@ -1,15 +1,19 @@
 #pragma once
 #include "Cell.h"
 #include "GeneralConsts.h"
+#include "State.h"
 #include <vector>
 #include <queue>
 #include "CompareCellsWithDistance.h"
 
 using namespace std;
 
+class State;
+
 class GameMngr
 {
 private:
+	State* currentState;
 	bool MonstersTurn;
 	bool PacmanTurn;
 
@@ -21,7 +25,8 @@ private:
 	int coinsLeft;
 	int coinsCounter;
 	bool runPacmanBFS;
-	bool PackmanNeedToMove;
+	bool packmanNeedToCollectCoins;
+	bool packmanRunFromGhosts;
 
 	vector <Cell*> pacmanGrays;
 	vector<priority_queue<Cell*, vector<Cell*>, CompareCellsWithDistance>> listOfPriorityQueues;// PriorityQueues of each ghost
@@ -33,6 +38,7 @@ private:
 
 public:
 	// Getters
+	State* getCurrentState() const { return currentState; }
 	bool getMonstersTurn() const { return MonstersTurn; }
 	bool getPacmanTurn() const { return PacmanTurn; }
 	Cell* getPacman() const { return pacman; }
@@ -41,7 +47,8 @@ public:
 	int getCoinsLeft() const { return coinsLeft; }
 	int getCoinsCounter() const { return coinsCounter; }
 	bool getRunPacmanBFS() const { return runPacmanBFS; }
-	bool getPackmanNeedToMove() const { return PackmanNeedToMove; }
+	bool getPackmanNeedToCollectCoins() const { return packmanNeedToCollectCoins; }
+	bool getPackmanRunFromGhosts() const { return packmanRunFromGhosts; }
 	vector<Cell*>& getPacmanGrays() { return pacmanGrays; }
 	vector<priority_queue<Cell*, vector<Cell*>, CompareCellsWithDistance>>& getListOfPriorityQueues() { return listOfPriorityQueues; }
 	vector<bool>& getGhostNeedToMoveList() { return ghostNeedToMoveList; }
@@ -51,6 +58,7 @@ public:
 	vector<Cell*>& getGhostsList() { return ghostsList; }
 
 	// Setters
+	void setCurrentState(State* value) { currentState = value; }
 	void setMonstersTurn(bool value) { MonstersTurn = value; }
 	void setPacmanTurn(bool value) { PacmanTurn = value; }
 	void setPacman(Cell* p) { pacman = p; }
@@ -59,7 +67,8 @@ public:
 	void setCoinsLeft(int value) { coinsLeft = value; }
 	void setCoinsCounter(int value) { coinsCounter = value; }
 	void setRunPacmanBFS(bool value) { runPacmanBFS = value; }
-	void setPackmanNeedToMove(bool value) { PackmanNeedToMove = value; }
+	void setPackmanNeedToCollectCoins(bool value) { packmanNeedToCollectCoins = value; }
+	void setPackmanRunFromGhosts(bool value) { packmanRunFromGhosts = value; }
 	void setPacmanGrays(const vector<Cell*>& pg) { pacmanGrays = pg; }
 	void setListOfPriorityQueues(const vector<priority_queue<Cell*, vector<Cell*>, CompareCellsWithDistance>>& lopq) { listOfPriorityQueues = lopq; }
 	void setGhostNeedToMoveList(const vector<bool>& gntml) { ghostNeedToMoveList = gntml; }
@@ -76,7 +85,7 @@ public:
 	void runPacmanGame(int** maze);
 	void pacmanIteration(Cell* pacman, int** maze, vector<Cell*> ghostsList, vector<Cell*>& pacmanGrays);
 	void collectCoin(int r, int c, int** maze);
-	void RunPacmanBFS(Cell* pacman, int** maze, vector<Cell*>& pacmanGrays, bool* PackmanNeedToMove, bool* runPackman);
+	void RunPacmanBFS(Cell* pacman, int** maze, vector<Cell*>& pacmanGrays, bool* packmanNeedToCollectCoins, bool* runPackman);
 	void PacmanRunAwayGhost(Cell* pacman, Cell* ghost, int** maze);
 	void GhostsIteration(Cell* pacman, int** maze);
 	void justMove(Cell*& pc, int** maze);
