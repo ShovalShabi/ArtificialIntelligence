@@ -34,6 +34,7 @@ void GameMngr::RestorePacmanPath(Cell* pc, Cell*& pacman, int** maze)
 	while (distanceBetweenPacmanToPc > 1) // iterate over path to next coin until next move of pacman
 	{
 		pc = pc->getParent();
+		//maze[pc->getRow()][pc->getColumn()] = PATH;
 		distanceBetweenPacmanToPc = GetDistanceBetweenTwoDots(pc->getRow(), pc->getColumn(), pacman->getRow(), pacman->getColumn());
 	}
 	// move pacman one step
@@ -43,6 +44,13 @@ void GameMngr::RestorePacmanPath(Cell* pc, Cell*& pacman, int** maze)
 	pacman->setColumn(pc->getColumn());
 	PackmanNeedToMove = false; // bool flag of pacman movement set to false
 	updateMaze(maze);
+	//int indexToPop = 0;
+	//for (int i = 0; i < (int)pacmanGrays.size(); i++)
+	//{
+	//	if (pacmanGrays[i]->getRow() == pc->getRow() && pacmanGrays[i]->getColumn() == pc->getColumn())
+	//		indexToPop = i;
+	//}
+	//pacmanGrays.erase(pacmanGrays.begin() + indexToPop);
 }
 
 
@@ -242,16 +250,16 @@ void GameMngr::RunPacmanBFS(Cell*& pacman, int** maze, vector<Cell*>& pacmanGray
 				pacmanGrays.erase(pacmanGrays.begin());
 				// add all white neighbors of pcurrent to grays
 				// UP
-				if (*PackmanNeedToMove && (maze[r + 1][c] == SPACE || maze[r + 1][c] == COIN || maze[r + 1][c] == GHOST))
+				if (*PackmanNeedToMove && (maze[r + 1][c] == SPACE || maze[r + 1][c] == COIN || maze[r + 1][c] == GHOST || maze[r + 1][c] == PATH))
 					CheckPacmanNeighbor(r + 1, c, pcurrent, pacman, maze);
 				// DOWN
-				if (*PackmanNeedToMove && (maze[r - 1][c] == SPACE || maze[r - 1][c] == COIN || maze[r - 1][c] == GHOST))
+				if (*PackmanNeedToMove && (maze[r - 1][c] == SPACE || maze[r - 1][c] == COIN || maze[r - 1][c] == GHOST || maze[r - 1][c] == PATH))
 					CheckPacmanNeighbor(r - 1, c, pcurrent, pacman, maze);
 				// LEFT
-				if (*PackmanNeedToMove && (maze[r][c - 1] == SPACE || maze[r][c - 1] == COIN || maze[r][c + 1] == GHOST))
+				if (*PackmanNeedToMove && (maze[r][c - 1] == SPACE || maze[r][c - 1] == COIN || maze[r][c + 1] == GHOST || maze[r][c + 1] == PATH))
 					CheckPacmanNeighbor(r, c - 1, pcurrent, pacman, maze);
 				// RIGHT
-				if (*PackmanNeedToMove && (maze[r][c + 1] == SPACE || maze[r][c + 1] == COIN || maze[r][c - 1] == GHOST))
+				if (*PackmanNeedToMove && (maze[r][c + 1] == SPACE || maze[r][c + 1] == COIN || maze[r][c - 1] == GHOST || maze[r][c - 1] == PATH))
 					CheckPacmanNeighbor(r, c + 1, pcurrent, pacman, maze);
 			}
 		}
@@ -265,7 +273,7 @@ void GameMngr::PacmanRunAwayGhost(Cell*& pacman, Cell* ghost, int** maze)
 	int ghostRow = ghost->getRow(), ghostCol = ghost->getColumn();
 
 	// check which direction is the best for pacman to run away in one step away
-	vector<Cell*> cellPointers = { 
+	vector<Cell*> cellPointers = {
 		new Cell(pacRow + 1,pacCol,nullptr),
 		new Cell(pacRow - 1,pacCol,nullptr),
 		new Cell(pacRow,pacCol + 1,nullptr),
@@ -273,7 +281,7 @@ void GameMngr::PacmanRunAwayGhost(Cell*& pacman, Cell* ghost, int** maze)
 
 	double maxDistance = -1;
 	int maxDistIndex = 0;
-	for (int i = 0; i < (int) cellPointers.size(); i++)
+	for (int i = 0; i < (int)cellPointers.size(); i++)
 	{
 		double tempDist = GetDistanceBetweenTwoDots(cellPointers[i]->getRow(), cellPointers[i]->getColumn(), ghostRow, ghostCol);
 		if (tempDist > maxDistance)
@@ -282,6 +290,9 @@ void GameMngr::PacmanRunAwayGhost(Cell*& pacman, Cell* ghost, int** maze)
 			maxDistIndex = i;
 		}
 	}
+	if (maze[cellPointers[maxDistIndex]->getRow()][cellPointers[maxDistIndex]->getColumn()] == WALL ||
+		maze[cellPointers[maxDistIndex]->getRow()][cellPointers[maxDistIndex]->getColumn()] == GHOST)// in case of another ghost appears
+		return;
 
 	if (maze[cellPointers[maxDistIndex]->getRow()][cellPointers[maxDistIndex]->getColumn()] == SPACE ||
 		maze[cellPointers[maxDistIndex]->getRow()][cellPointers[maxDistIndex]->getColumn()] == COIN)
@@ -291,7 +302,6 @@ void GameMngr::PacmanRunAwayGhost(Cell*& pacman, Cell* ghost, int** maze)
 		maze[cellPointers[maxDistIndex]->getRow()][cellPointers[maxDistIndex]->getColumn()] = PACMAN; // updating the actual postion of pacman on board
 		pacman->setRow(cellPointers[maxDistIndex]->getRow()); //updating the pacman object row position
 		pacman->setColumn(cellPointers[maxDistIndex]->getColumn());  //updating the pacman object column position
-		updateMaze(maze);
 	}
 }
 
