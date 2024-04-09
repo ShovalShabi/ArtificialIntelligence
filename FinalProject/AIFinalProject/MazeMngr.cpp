@@ -161,7 +161,7 @@ void MazeMngr::DrawMaze()
 				glColor3d(0, 0, 0); // light gray
 				break;
 			case GRAY:
-				glColor3d(0.9, 0.9, 0.9); // light gray
+				glColor3d(0.5, 0.5, 0.5); // light gray
 				break;
 			case PATH:
 				glColor3d(0.8, 0.5, 1); // purple
