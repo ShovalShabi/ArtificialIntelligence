@@ -28,48 +28,12 @@ GameMngr::GameMngr(int numCoins)
 	this->ghostsList = vector<Cell*>();
 }
 
-void GameMngr::RestorePacmanPath(Cell* pc, Cell* pacman, int** maze)
-{
-	double distanceBetweenPacmanToPc = GetDistanceBetweenTwoDots(pc->getRow(), pc->getColumn(), pacman->getRow(), pacman->getColumn());
-	pacmanGrays.clear();// Clearing irrelavent cells for path
-	while (distanceBetweenPacmanToPc > 1) // iterate over path to next coin until next move of pacman
-	{
-		pacmanGrays.push_back(pc);//inserting back the relevant cell exceot the closest one to pacman
-		pc = pc->getParent();
-		distanceBetweenPacmanToPc = GetDistanceBetweenTwoDots(pc->getRow(), pc->getColumn(), pacman->getRow(), pacman->getColumn());
-	}
-	// move pacman one step
-	maze[pacman->getRow()][pacman->getColumn()] = SPACE;
-	maze[pc->getRow()][pc->getColumn()] = PACMAN;
-	pacman->setRow(pc->getRow());
-	pacman->setColumn(pc->getColumn());
-	PackmanNeedToMove = false; // bool flag of pacman movement set to false
-	updateMaze(maze);
-	cout << "Pacman moved to cell ["<<pc->getRow()<<"]["<<pc->getColumn()<<"]\n";
-}
-
-
-void GameMngr::CheckPacmanNeighbor(int row, int column, Cell* pcurrent, Cell* pacman, int** maze)
-{
-	if (maze[row][column] == COIN) // if pacman found a coin to path -> move one step forward to it
-	{
-		RestorePacmanPath(pcurrent, pacman, maze);
-		return;
-	}
-	else // maze[row][column] is WHITE
-	{
-		Cell* pn = new Cell(row, column, pcurrent);
-		pacmanGrays.push_back(pn);
-		maze[row][column] = GRAY;
-	}
-}
-
 void GameMngr::updateMaze(int** maze) {
 	for (int i = 1; i < MSZ - 1; i++)
 	{
 		for (int j = 1; j < MSZ - 1; j++)
 		{
-			if (maze[i][j] == GRAY || maze[i][j] == BLACK  || maze[i][j] == PATH)
+			if (maze[i][j] == GRAY || maze[i][j] == BLACK || maze[i][j] == PATH || maze[i][j] == GRAY_PACMAN)
 			{
 				maze[i][j] = SPACE;
 			}
@@ -245,20 +209,56 @@ void GameMngr::RunPacmanBFS(Cell* pacman, int** maze, vector<Cell*>& pacmanGrays
 				maze[r][c] = BLACK;
 				pacmanGrays.erase(pacmanGrays.begin());
 				// add all white neighbors of pcurrent to grays
+				// Pacman ignores the GRAY mark of the ghosts and continues to explore path
 				// UP
-				if (*PackmanNeedToMove && (maze[r + 1][c] == SPACE || maze[r + 1][c] == COIN))
+				if (*PackmanNeedToMove && (maze[r + 1][c] == SPACE || maze[r + 1][c] == COIN || maze[r + 1][c] == GRAY))
 					CheckPacmanNeighbor(r + 1, c, pcurrent, pacman, maze);
 				// DOWN
-				if (*PackmanNeedToMove && (maze[r - 1][c] == SPACE || maze[r - 1][c] == COIN))
+				if (*PackmanNeedToMove && (maze[r - 1][c] == SPACE || maze[r - 1][c] == COIN || maze[r - 1][c] == GRAY))
 					CheckPacmanNeighbor(r - 1, c, pcurrent, pacman, maze);
 				// LEFT
-				if (*PackmanNeedToMove && (maze[r][c - 1] == SPACE || maze[r][c - 1] == COIN))
+				if (*PackmanNeedToMove && (maze[r][c - 1] == SPACE || maze[r][c - 1] == COIN || maze[r][c - 1] == GRAY))
 					CheckPacmanNeighbor(r, c - 1, pcurrent, pacman, maze);
 				// RIGHT
-				if (*PackmanNeedToMove && (maze[r][c + 1] == SPACE || maze[r][c + 1] == COIN))
+				if (*PackmanNeedToMove && (maze[r][c + 1] == SPACE || maze[r][c + 1] == COIN || maze[r][c + 1] == GRAY))
 					CheckPacmanNeighbor(r, c + 1, pcurrent, pacman, maze);
 			}
 		}
+	}
+}
+
+void GameMngr::RestorePacmanPath(Cell* pc, Cell* pacman, int** maze)
+{
+	double distanceBetweenPacmanToPc = GetDistanceBetweenTwoDots(pc->getRow(), pc->getColumn(), pacman->getRow(), pacman->getColumn());
+	pacmanGrays.clear();// Clearing irrelavent cells for path
+	while (distanceBetweenPacmanToPc > 1) // iterate over path to next coin until next move of pacman
+	{
+		pacmanGrays.push_back(pc);//inserting back the relevant cell exceot the closest one to pacman
+		pc = pc->getParent();
+		distanceBetweenPacmanToPc = GetDistanceBetweenTwoDots(pc->getRow(), pc->getColumn(), pacman->getRow(), pacman->getColumn());
+	}
+	// move pacman one step
+	maze[pacman->getRow()][pacman->getColumn()] = SPACE;
+	maze[pc->getRow()][pc->getColumn()] = PACMAN;
+	pacman->setRow(pc->getRow());
+	pacman->setColumn(pc->getColumn());
+	PackmanNeedToMove = false; // bool flag of pacman movement set to false
+	updateMaze(maze);
+}
+
+
+void GameMngr::CheckPacmanNeighbor(int row, int column, Cell* pcurrent, Cell* pacman, int** maze)
+{
+	if (maze[row][column] == COIN) // if pacman found a coin to path -> move one step forward to it
+	{
+		RestorePacmanPath(pcurrent, pacman, maze);
+		return;
+	}
+	else // maze[row][column] is WHITE
+	{
+		Cell* pn = new Cell(row, column, pcurrent);
+		pacmanGrays.push_back(pn);
+		maze[row][column] = GRAY_PACMAN;
 	}
 }
 
@@ -291,7 +291,8 @@ void GameMngr::PacmanRunAwayGhost(Cell* pacman, Cell* ghost, int** maze)
 		return;
 
 	if (maze[cellPointers[maxDistIndex]->getRow()][cellPointers[maxDistIndex]->getColumn()] == SPACE ||
-		maze[cellPointers[maxDistIndex]->getRow()][cellPointers[maxDistIndex]->getColumn()] == COIN)
+		maze[cellPointers[maxDistIndex]->getRow()][cellPointers[maxDistIndex]->getColumn()] == COIN ||
+		maze[cellPointers[maxDistIndex]->getRow()][cellPointers[maxDistIndex]->getColumn()] == GRAY)
 	{
 		collectCoin(cellPointers[maxDistIndex]->getRow(), cellPointers[maxDistIndex]->getColumn(), maze);
 		maze[pacRow][pacCol] = SPACE; // Updating the current postion of pacman to an empty space
