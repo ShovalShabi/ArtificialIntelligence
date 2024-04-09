@@ -16,3 +16,4 @@
 #define TEMPPACMAN 10
 #define NUMGHOSTS 3
 #define PROXIMITY 3
+#define GRAY_PACMAN 11
