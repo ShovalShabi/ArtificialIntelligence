@@ -140,6 +140,11 @@
     <ClInclude Include="GameMngr.h" />
     <ClInclude Include="GeneralConsts.h" />
     <ClInclude Include="MazeMngr.h" />
+    <ClInclude Include="PacmanCollectCoinsState.h" />
+    <ClInclude Include="PacmanRunFromGhostsState.h" />
+    <ClInclude Include="PacmanStuckState.h" />
+    <ClInclude Include="PacmanWonState.h" />
+    <ClInclude Include="State.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\..\..\Downloads\SaarGamzo_HW3\HW3_Pacman_SaarGamzo\Graphics\Graphics\CompareCellsWithDistance.cpp" />
@@ -147,6 +152,10 @@
     <ClCompile Include="GameMngr.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MazeMngr.cpp" />
+    <ClCompile Include="PacmanCollectCoinsState.cpp" />
+    <ClCompile Include="PacmanRunFromGhostsState.cpp" />
+    <ClCompile Include="PacmanStuckState.cpp" />
+    <ClCompile Include="PacmanWonState.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="..\..\..\..\..\Downloads\FSM\Graphics\Graphics\freeglut.lib" />

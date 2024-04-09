@@ -51,6 +51,21 @@
     <ClInclude Include="MazeMngr.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="State.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PacmanCollectCoinsState.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PacmanRunFromGhostsState.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PacmanWonState.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PacmanStuckState.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\..\..\Downloads\SaarGamzo_HW3\HW3_Pacman_SaarGamzo\Graphics\Graphics\CompareCellsWithDistance.cpp">
@@ -66,6 +81,18 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="MazeMngr.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PacmanCollectCoinsState.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PacmanRunFromGhostsState.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PacmanWonState.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PacmanStuckState.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
