@@ -71,14 +71,14 @@ public:
 
 	//Actual Functions
 	GameMngr(int numCoins);
-	void RestorePacmanPath(Cell* pc, Cell*& pacman, int** maze);
-	void CheckPacmanNeighbor(int row, int column, Cell* pcurrent, Cell*& pacman, int** maze);
+	void RestorePacmanPath(Cell* pc, Cell* pacman, int** maze);
+	void CheckPacmanNeighbor(int row, int column, Cell* pcurrent, Cell* pacman, int** maze);
 	void updateMaze(int** maze);
 	void runPacmanGame(int** maze);
-	void pacmanIteration(Cell*& pacman, int** maze, vector<Cell*> ghostsList, vector<Cell*>& pacmanGrays);
+	void pacmanIteration(Cell* pacman, int** maze, vector<Cell*> ghostsList, vector<Cell*>& pacmanGrays);
 	void collectCoin(int r, int c, int** maze);
-	void RunPacmanBFS(Cell*& pacman, int** maze, vector<Cell*>& pacmanGrays, bool* PackmanNeedToMove, bool* runPackman);
-	void PacmanRunAwayGhost(Cell*& pacman, Cell* ghost, int** maze);
+	void RunPacmanBFS(Cell* pacman, int** maze, vector<Cell*>& pacmanGrays, bool* PackmanNeedToMove, bool* runPackman);
+	void PacmanRunAwayGhost(Cell* pacman, Cell* ghost, int** maze);
 	void GhostsIteration(Cell* pacman, int** maze);
 	void justMove(Cell*& pc, int** maze);
 	void GhostIteration(int indexGhost, Cell* pacman, int** maze);
