@@ -128,17 +128,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\..\..\Downloads\FSM\Graphics\Graphics\ChoppingTrees.h" />
-    <ClInclude Include="..\..\..\..\..\Downloads\FSM\Graphics\Graphics\DropWood.h" />
     <ClInclude Include="..\..\..\..\..\Downloads\FSM\Graphics\Graphics\freeglut.h" />
     <ClInclude Include="..\..\..\..\..\Downloads\FSM\Graphics\Graphics\freeglut_ext.h" />
     <ClInclude Include="..\..\..\..\..\Downloads\FSM\Graphics\Graphics\freeglut_std.h" />
     <ClInclude Include="..\..\..\..\..\Downloads\FSM\Graphics\Graphics\glew.h" />
     <ClInclude Include="..\..\..\..\..\Downloads\FSM\Graphics\Graphics\glxew.h" />
-    <ClInclude Include="..\..\..\..\..\Downloads\FSM\Graphics\Graphics\GoToForest.h" />
-    <ClInclude Include="..\..\..\..\..\Downloads\FSM\Graphics\Graphics\GoToWareHouse.h" />
-    <ClInclude Include="..\..\..\..\..\Downloads\FSM\Graphics\Graphics\NPC.h" />
-    <ClInclude Include="..\..\..\..\..\Downloads\FSM\Graphics\Graphics\State.h" />
     <ClInclude Include="..\..\..\..\..\Downloads\FSM\Graphics\Graphics\wglew.h" />
     <ClInclude Include="..\..\..\..\..\Downloads\SaarGamzo_HW3\HW3_Pacman_SaarGamzo\Graphics\Graphics\CompareCellsWithDistance.h" />
     <ClInclude Include="..\..\..\..\..\Downloads\SaarGamzo_HW3\HW3_Pacman_SaarGamzo\Graphics\Graphics\glut.h" />
@@ -148,13 +142,6 @@
     <ClInclude Include="MazeMngr.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\..\..\Downloads\FSM\Graphics\Graphics\ChoppingTrees.cpp" />
-    <ClCompile Include="..\..\..\..\..\Downloads\FSM\Graphics\Graphics\DropWood.cpp" />
-    <ClCompile Include="..\..\..\..\..\Downloads\FSM\Graphics\Graphics\GoToForest.cpp" />
-    <ClCompile Include="..\..\..\..\..\Downloads\FSM\Graphics\Graphics\GoToWareHouse.cpp" />
-    <ClCompile Include="..\..\..\..\..\Downloads\FSM\Graphics\Graphics\FSMMain.cpp" />
-    <ClCompile Include="..\..\..\..\..\Downloads\FSM\Graphics\Graphics\NPC.cpp" />
-    <ClCompile Include="..\..\..\..\..\Downloads\FSM\Graphics\Graphics\State.cpp" />
     <ClCompile Include="..\..\..\..\..\Downloads\SaarGamzo_HW3\HW3_Pacman_SaarGamzo\Graphics\Graphics\CompareCellsWithDistance.cpp" />
     <ClCompile Include="Cell.cpp" />
     <ClCompile Include="GameMngr.cpp" />

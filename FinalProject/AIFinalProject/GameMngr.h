@@ -2,7 +2,6 @@
 #include "Cell.h"
 #include "GeneralConsts.h"
 #include <vector>
-
 #include <queue>
 #include "CompareCellsWithDistance.h"
 
