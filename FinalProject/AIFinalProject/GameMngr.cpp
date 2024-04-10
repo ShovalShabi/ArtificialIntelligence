@@ -1,5 +1,8 @@
 #include "GameMngr.h"
 #include "PacmanCollectCoinsState.h"
+#include "PacmanRunFromGhostsState.h"
+#include "PacmanStuckState.h"
+#include "PacmanWonState.h"
 #include <iostream>
 #include <math.h>
 
@@ -17,7 +20,6 @@ GameMngr::GameMngr(int numCoins)
 
 	this->coinsLeft = numCoins;
 	this->coinsCounter = 0;
-	this->runPacmanBFS = false;
 	this->packmanNeedToCollectCoins = true;
 	this->packmanRunFromGhosts = false;
 	this->currentState = new PacmanCollectCoinsState();
@@ -66,7 +68,8 @@ void GameMngr::runPacmanGame(int** maze)
 		else
 		{
 			cout << "Pacman collected all the coins! Pacman won!\n";
-			runPackman = false;
+			currentState->Transition(this, new PacmanWonState());
+			//runPackman = false;
 		}
 	}
 	else
@@ -102,71 +105,77 @@ void GameMngr::pacmanIteration(Cell* pacman, int** maze, vector<Cell*> ghostsLis
 		updateMaze(maze);
 		MonstersTurn = true;
 		PacmanTurn = false;
-		return; // move one step away and finish turn
+		currentState->Transition(this, new PacmanRunFromGhostsState());
+		//return; // move one step away and finish turn
 	}
+	else
+		currentState->Transition(this, new PacmanCollectCoinsState());
 
-	// if getting here- there are no monsters close & pacman can chase coins
-	// check if pacman found a coin next to him:
-	int pacR = pacman->getRow(), pacC = pacman->getColumn();
-	// check if coin is one step up from pacman
-	if (maze[pacR + 1][pacC] == COIN)
+	if (packmanNeedToCollectCoins)
 	{
-		collectCoin(pacR + 1, pacC, maze);// erase coin
-		// move pacman Up
-		maze[pacR][pacC] = SPACE;
-		pacman->setRow(pacR + 1);
-		pacman->setColumn(pacC);
-		maze[pacR + 1][pacC] = PACMAN;
-		updateMaze(maze);
-		MonstersTurn = true;
-		PacmanTurn = false;
-		return;
-	}
-	// check if coin is down step down from pacman
-	else if (maze[pacR - 1][pacC] == COIN) {
-		collectCoin(pacR - 1, pacC, maze);// erase coin
-		// move pacman Down
-		maze[pacR][pacC] = SPACE;
-		pacman->setRow(pacR - 1);
-		pacman->setColumn(pacC);
-		maze[pacR - 1][pacC] = PACMAN;
-		updateMaze(maze);
-		MonstersTurn = true;
-		PacmanTurn = false;
-		return;
-	}
-	// check if coin is one step right from pacman
-	else if (maze[pacR][pacC + 1] == COIN) {
-		collectCoin(pacR, pacC + 1, maze);// erase coin
-		// move pacman Right
-		maze[pacR][pacC] = SPACE;
-		pacman->setRow(pacR);
-		pacman->setColumn(pacC + 1);
-		maze[pacR][pacC + 1] = PACMAN;
-		updateMaze(maze);
-		MonstersTurn = true;
-		PacmanTurn = false;
-		return;
-	}
-	// check if coin is one step left from pacman
-	else if (maze[pacR][pacC - 1] == COIN) {
-		collectCoin(pacR, pacC - 1, maze);// erase coin
-		// move pacman Left
-		maze[pacR][pacC] = SPACE;
-		pacman->setRow(pacR);
-		pacman->setColumn(pacC - 1);
-		maze[pacR][pacC - 1] = PACMAN;
-		updateMaze(maze);
-		MonstersTurn = true;
-		PacmanTurn = false;
-		return;
-	}
-	// if coins are further than 1 step - start BFS & move one step to first coin pacman found:
-	packmanNeedToCollectCoins = true;
-	RunPacmanBFS(pacman, maze, pacmanGrays, &packmanNeedToCollectCoins, &runPackman);
+		// if getting here- there are no monsters close & pacman can chase coins
+		// check if pacman found a coin next to him:
+		int pacR = pacman->getRow(), pacC = pacman->getColumn();
+		// check if coin is one step up from pacman
+		if (maze[pacR + 1][pacC] == COIN)
+		{
+			collectCoin(pacR + 1, pacC, maze);// erase coin
+			// move pacman Up
+			maze[pacR][pacC] = SPACE;
+			pacman->setRow(pacR + 1);
+			pacman->setColumn(pacC);
+			maze[pacR + 1][pacC] = PACMAN;
+			updateMaze(maze);
+			MonstersTurn = true;
+			PacmanTurn = false;
+			return;
+		}
+		// check if coin is down step down from pacman
+		else if (maze[pacR - 1][pacC] == COIN) {
+			collectCoin(pacR - 1, pacC, maze);// erase coin
+			// move pacman Down
+			maze[pacR][pacC] = SPACE;
+			pacman->setRow(pacR - 1);
+			pacman->setColumn(pacC);
+			maze[pacR - 1][pacC] = PACMAN;
+			updateMaze(maze);
+			MonstersTurn = true;
+			PacmanTurn = false;
+			return;
+		}
+		// check if coin is one step right from pacman
+		else if (maze[pacR][pacC + 1] == COIN) {
+			collectCoin(pacR, pacC + 1, maze);// erase coin
+			// move pacman Right
+			maze[pacR][pacC] = SPACE;
+			pacman->setRow(pacR);
+			pacman->setColumn(pacC + 1);
+			maze[pacR][pacC + 1] = PACMAN;
+			updateMaze(maze);
+			MonstersTurn = true;
+			PacmanTurn = false;
+			return;
+		}
+		// check if coin is one step left from pacman
+		else if (maze[pacR][pacC - 1] == COIN) {
+			collectCoin(pacR, pacC - 1, maze);// erase coin
+			// move pacman Left
+			maze[pacR][pacC] = SPACE;
+			pacman->setRow(pacR);
+			pacman->setColumn(pacC - 1);
+			maze[pacR][pacC - 1] = PACMAN;
+			updateMaze(maze);
+			MonstersTurn = true;
+			PacmanTurn = false;
+			return;
+		}
+		// if coins are further than 1 step - start BFS & move one step to first coin pacman found:
+		//packmanNeedToCollectCoins = true;
+		RunPacmanBFS(pacman, maze, pacmanGrays, &packmanNeedToCollectCoins, &runPackman);
 
-	MonstersTurn = true;
-	PacmanTurn = false;
+		MonstersTurn = true;
+		PacmanTurn = false;
+	}
 }
 
 
@@ -203,7 +212,8 @@ void GameMngr::RunPacmanBFS(Cell* pacman, int** maze, vector<Cell*>& pacmanGrays
 				*runPackman = false;
 				updateMaze(maze);
 				maze[pacman->getRow()][pacman->getColumn()] = PACMAN;
-				return;
+				currentState->Transition(this, new PacmanStuckState());
+				//return;
 			}
 			else // grays is not empty
 			{
@@ -322,57 +332,19 @@ void GameMngr::GhostsIteration(Cell* pacman, int** maze)
 			else
 			{
 				cout << "Monster " << i << " got pacman, GAME OVER!.\n";
-				runPackman = false;
+				currentState->Transition(this, new PacmanStuckState());
+				//runPackman = false;
 			}
 		}
 		else
 		{
-			justMove(ghostsList[i], maze);
-			//cout << "Ghost number " << i << " just moved and now is at [" << ghostsList[i]->getRow() << "][" << ghostsList[i]->getColumn() << "]" << endl;
+			ghostStuckList[i] = true;
+			ghostFoundPathList[i] = false;
 		}
 	}
 
 	MonstersTurn = false;
 	PacmanTurn = true;
-}
-
-// function to move any stuck monster on o
-void GameMngr::justMove(Cell*& pc, int** maze) {
-	int r = pc->getRow(), c = pc->getColumn();
-	// Move the monster the the open space	
-	// UP
-	if (maze[r + 1][c] == SPACE)
-	{
-		maze[r][c] = SPACE;
-		maze[r + 1][c] = GHOST;
-		pc->setRow(r + 1);
-		pc->setColumn(c);
-	}
-	// DOWN
-	else if (maze[r - 1][c] == SPACE)
-	{
-		maze[r][c] = SPACE;
-		maze[r - 1][c] = GHOST;
-		pc->setRow(r - 1);
-		pc->setColumn(c);
-	}
-	// LEFT
-	else if (maze[r][c - 1] == SPACE)
-	{
-		maze[r][c] = SPACE;
-		maze[r][c - 1] = GHOST;
-		pc->setRow(r);
-		pc->setColumn(c - 1);
-	}
-	// RIGHT
-	else if (maze[r][c + 1] == SPACE)
-	{
-		maze[r][c] = SPACE;
-		maze[r][c + 1] = GHOST;
-		pc->setRow(r);
-		pc->setColumn(c + 1);
-	}
-
 }
 
 void GameMngr::GhostIteration(int indexGhost, Cell* pacman, int** maze)
@@ -399,16 +371,16 @@ void GameMngr::GhostIteration(int indexGhost, Cell* pacman, int** maze)
 				listOfPriorityQueues[indexGhost].pop();
 				// add all white neighbors of pcurrent to grays
 				// UP
-				if (ghostFoundPathList[indexGhost] && maze[r + 1][c] == SPACE || maze[r + 1][c] == PACMAN || maze[r + 1][c] == COIN)
+				if (ghostFoundPathList[indexGhost] && maze[r + 1][c] == SPACE || maze[r + 1][c] == PACMAN || maze[r + 1][c] == COIN || maze[r + 1][c] == GRAY_PACMAN || maze[r + 1][c] == GHOST)
 					CheckNeighborForGhost(r + 1, c, pcurrent, ghostsList[indexGhost], indexGhost, pacman, maze);
 				// DOWN
-				if (ghostFoundPathList[indexGhost] && maze[r - 1][c] == SPACE || maze[r - 1][c] == PACMAN || maze[r - 1][c] == COIN)
+				if (ghostFoundPathList[indexGhost] && maze[r - 1][c] == SPACE || maze[r - 1][c] == PACMAN || maze[r - 1][c] == COIN || maze[r - 1][c] == GRAY_PACMAN || maze[r - 1][c] == GHOST)
 					CheckNeighborForGhost(r - 1, c, pcurrent, ghostsList[indexGhost], indexGhost, pacman, maze);
 				// LEFT
-				if (ghostFoundPathList[indexGhost] && maze[r][c - 1] == SPACE || maze[r][c - 1] == PACMAN || maze[r][c - 1] == COIN)
+				if (ghostFoundPathList[indexGhost] && maze[r][c - 1] == SPACE || maze[r][c - 1] == PACMAN || maze[r][c - 1] == COIN || maze[r][c - 1] == GRAY_PACMAN || maze[r][c - 1] == GHOST)
 					CheckNeighborForGhost(r, c - 1, pcurrent, ghostsList[indexGhost], indexGhost, pacman, maze);
 				// RIGHT
-				if (ghostFoundPathList[indexGhost] && maze[r][c + 1] == SPACE || maze[r][c + 1] == PACMAN || maze[r][c + 1] == COIN)
+				if (ghostFoundPathList[indexGhost] && maze[r][c + 1] == SPACE || maze[r][c + 1] == PACMAN || maze[r][c + 1] == COIN || maze[r][c + 1] == GRAY_PACMAN || maze[r][c + 1] == GHOST)
 					CheckNeighborForGhost(r, c + 1, pcurrent, ghostsList[indexGhost], indexGhost, pacman, maze);
 			}
 		}

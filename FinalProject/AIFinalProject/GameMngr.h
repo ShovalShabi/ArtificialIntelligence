@@ -24,7 +24,6 @@ private:
 
 	int coinsLeft;
 	int coinsCounter;
-	bool runPacmanBFS;
 	bool packmanNeedToCollectCoins;
 	bool packmanRunFromGhosts;
 
@@ -46,7 +45,6 @@ public:
 	bool getRunPackman() const { return runPackman; }
 	int getCoinsLeft() const { return coinsLeft; }
 	int getCoinsCounter() const { return coinsCounter; }
-	bool getRunPacmanBFS() const { return runPacmanBFS; }
 	bool getPackmanNeedToCollectCoins() const { return packmanNeedToCollectCoins; }
 	bool getPackmanRunFromGhosts() const { return packmanRunFromGhosts; }
 	vector<Cell*>& getPacmanGrays() { return pacmanGrays; }
@@ -66,7 +64,6 @@ public:
 	void setRunPackman(bool value) { runPackman = value; }
 	void setCoinsLeft(int value) { coinsLeft = value; }
 	void setCoinsCounter(int value) { coinsCounter = value; }
-	void setRunPacmanBFS(bool value) { runPacmanBFS = value; }
 	void setPackmanNeedToCollectCoins(bool value) { packmanNeedToCollectCoins = value; }
 	void setPackmanRunFromGhosts(bool value) { packmanRunFromGhosts = value; }
 	void setPacmanGrays(const vector<Cell*>& pg) { pacmanGrays = pg; }
@@ -88,7 +85,6 @@ public:
 	void RunPacmanBFS(Cell* pacman, int** maze, vector<Cell*>& pacmanGrays, bool* packmanNeedToCollectCoins, bool* runPackman);
 	void PacmanRunAwayGhost(Cell* pacman, Cell* ghost, int** maze);
 	void GhostsIteration(Cell* pacman, int** maze);
-	void justMove(Cell*& pc, int** maze);
 	void GhostIteration(int indexGhost, Cell* pacman, int** maze);
 	void CheckNeighborForGhost(int row, int column, Cell* pcurrent, Cell*& ghost, int indexGhost, Cell* pacman, int** maze);
 	void RestorePathForGhost(Cell* pc, Cell*& ghost, int indexGhost, int** maze, Cell* pacman);

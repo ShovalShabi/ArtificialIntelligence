@@ -15,10 +15,13 @@ void PacmanRunFromGhostsState::Transition(GameMngr* gameMngr, State* anotherStat
 	{
 		gameMngr->setCurrentState(new PacmanCollectCoinsState());
 	}
-	else
+	else if (dynamic_cast<PacmanRunFromGhostsState*>(anotherState))// this state can be circular while the minimal proximity distance is still in range of PROXIMITY macro distance
 	{
-		gameMngr->setCurrentState(new PacmanStuckState());
+		gameMngr->setCurrentState(new PacmanRunFromGhostsState());
 	}
+	else
+		gameMngr->setCurrentState(new PacmanStuckState());
+
 	gameMngr->getCurrentState()->OnEnter(gameMngr);
 }
 

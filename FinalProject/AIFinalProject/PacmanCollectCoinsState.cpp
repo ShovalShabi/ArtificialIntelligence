@@ -22,6 +22,10 @@ void PacmanCollectCoinsState::Transition(GameMngr* gameMngr, State* anotherState
 	{
 		gameMngr->setCurrentState(new PacmanStuckState());
 	}
+	else if (dynamic_cast<PacmanCollectCoinsState*>(anotherState))// this state can be circular while there are more coins to collect and the minimal proximity distance is no longer than PROXIMITY macro
+	{
+		gameMngr->setCurrentState(new PacmanCollectCoinsState());
+	}
 	else
 	{
 		gameMngr->setCurrentState(new PacmanWonState());
