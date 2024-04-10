@@ -9,29 +9,33 @@
 using namespace std;
 
 class State;
+class Cell;
 
+/**
+ * @brief Class representing the game manager.
+ */
 class GameMngr
 {
 private:
-	State* currentState;
+	State* currentState; /**< Pointer to the current state of the game. */
 
-	Cell* pacman;
-	vector<Cell*> coins; // all coins
+	Cell* pacman; /**< Pointer to the cell representing the position of Pacman. */
+	vector<Cell*> coins; /**< Vector containing pointers to all coins in the game. */
 
-	bool runPackman;
+	bool runPackman; /**< Flag indicating whether Pacman is running. */
 
-	int coinsLeft;
-	int coinsCounter;
-	bool packmanNeedToCollectCoins;
-	bool packmanRunFromGhosts;
+	int coinsLeft; /**< Number of coins left in the game. */
+	int coinsCounter; /**< Counter for collected coins. */
+	bool packmanNeedToCollectCoins; /**< Flag indicating whether Pacman needs to collect coins. */
+	bool packmanRunFromGhosts; /**< Flag indicating whether Pacman needs to run from ghosts. */
 
-	vector <Cell*> pacmanGrays;
-	vector<priority_queue<Cell*, vector<Cell*>, CompareCellsWithDistance>> listOfPriorityQueues;// PriorityQueues of each ghost
-	vector<bool> ghostNeedToMoveList;// Flag list to each ghost for movement
-	vector<bool> ghostStuckList;// Flag list to each ghost for checking if the ghost is stuck
-	vector<bool> ghostFoundPathList;// Flag list to each ghost for checking id the ghost is stuck
-	vector<Cell*> ghostCellStartPos;// List to each ghost initial postion
-	vector<Cell*> ghostsList;// A list containgn the ghosts pointers
+	vector<Cell*> pacmanGrays; /**< Vector containing pointers to grayed cells around Pacman. */
+	vector<priority_queue<Cell*, vector<Cell*>, CompareCellsWithDistance>> listOfPriorityQueues; /**< Vector containing priority queues of cells for each ghost. */
+	vector<bool> ghostNeedToMoveList; /**< Flag list indicating whether each ghost needs to move. */
+	vector<bool> ghostStuckList; /**< Flag list indicating whether each ghost is stuck. */
+	vector<bool> ghostFoundPathList; /**< Flag list indicating whether each ghost has found a path. */
+	vector<Cell*> ghostCellStartPos; /**< Vector containing pointers to the initial positions of ghosts. */
+	vector<Cell*> ghostsList; /**< Vector containing pointers to all ghosts in the game. */
 
 public:
 	// Getters
@@ -69,19 +73,126 @@ public:
 	void setGhostsList(const vector<Cell*>& gl) { ghostsList = gl; }
 
 	//Actual Functions
+	/**
+	 * @brief Constructor for the GameMngr class.
+	 * @param numCoins Number of coins in the game.
+	 */
 	GameMngr(int numCoins);
+
+	/**
+	 * @brief Destructor for the GameMngr class.
+	 */
 	~GameMngr();
+
+	/**
+	 * @brief Restores the path for Pacman.
+	 * @param pc Pointer to the current cell.
+	 * @param pacman Pointer to the cell representing Pacman.
+	 * @param maze 2D array representing the maze.
+	 */
 	void RestorePacmanPath(Cell* pc, Cell* pacman, int** maze);
+
+	/**
+	 * @brief Checks the neighbor cells of Pacman.
+	 * @param row Row index of the current cell.
+	 * @param column Column index of the current cell.
+	 * @param pcurrent Pointer to the current cell.
+	 * @param pacman Pointer to the cell representing Pacman.
+	 * @param maze 2D array representing the maze.
+	 */
 	void CheckPacmanNeighbor(int row, int column, Cell* pcurrent, Cell* pacman, int** maze);
+
+	/**
+	 * @brief Updates the maze.
+	 * @param maze 2D array representing the maze.
+	 */
 	void updateMaze(int** maze);
+
+	/**
+	 * @brief Runs the Pacman game.
+	 * @param maze 2D array representing the maze.
+	 */
 	void runPacmanGame(int** maze);
-	void pacmanIteration(Cell* pacman, int** maze, vector<Cell*> ghostsList, vector<Cell*>& pacmanGrays);
+
+	/**
+	 * @brief Iterates Pacman's movement.
+	 * @param pacman Pointer to the cell representing Pacman.
+	 * @param maze 2D array representing the maze.
+	 * @param ghostsList Vector containing pointers to all ghosts in the game.
+	 * @param pacmanGrays Vector containing pointers to grayed cells around Pacman.
+	 */
+	void pacmanIteration(Cell* pacman, int** maze,vector<Cell*> ghostsList, vector<Cell*>& pacmanGrays);
+
+	/**
+	 * @brief Collects a coin.
+	 * @param r Row index of the coin.
+	 * @param c Column index of the coin.
+	 * @param maze 2D array representing the maze.
+	 */
 	void collectCoin(int r, int c, int** maze);
+
+	/**
+	 * @brief Runs the BFS algorithm for Pacman.
+	 * @param pacman Pointer to the cell representing Pacman.
+	 * @param maze 2D array representing the maze.
+	 * @param pacmanGrays Vector containing pointers to grayed cells around Pacman.
+	 * @param packmanNeedToCollectCoins Pointer to the flag indicating whether Pacman needs to collect coins.
+	 * @param runPackman Pointer to the flag indicating whether Pacman is running.
+	 */
 	void RunPacmanBFS(Cell* pacman, int** maze, vector<Cell*>& pacmanGrays, bool* packmanNeedToCollectCoins, bool* runPackman);
+
+	/**
+	 * @brief Makes Pacman run away from a ghost.
+	 * @param pacman Pointer to the cell representing Pacman.
+	 * @param ghost Pointer to the cell representing the ghost.
+	 * @param maze 2D array representing the maze.
+	 */
 	void PacmanRunAwayGhost(Cell* pacman, Cell* ghost, int** maze);
+
+	/**
+	 * @brief Iterates through the ghosts' movement.
+	 * @param pacman Pointer to the cell representing Pacman.
+	 * @param maze 2D array representing the maze.
+	 */
 	void GhostsIteration(Cell* pacman, int** maze);
+
+	/**
+	 * @brief Iterates the movement of a specific ghost.
+	 * @param indexGhost Index of the ghost.
+	 * @param pacman Pointer to the cell representing Pacman.
+	 * @param maze 2D array representing the maze.
+	 */
 	void GhostIteration(int indexGhost, Cell* pacman, int** maze);
+
+	/**
+	 * @brief Checks the neighbor cells of a ghost.
+	 * @param row Row index of the current cell.
+	 * @param column Column index of the current cell.
+	 * @param pcurrent Pointer to the current cell.
+	 * @param ghost Reference to the pointer to the cell representing the ghost.
+	 * @param indexGhost Index of the ghost.
+	 * @param pacman Pointer to the cell representing Pacman.
+	 * @param maze 2D array representing the maze.
+	 */
 	void CheckNeighborForGhost(int row, int column, Cell* pcurrent, Cell*& ghost, int indexGhost, Cell* pacman, int** maze);
+
+	/**
+	 * @brief Restores the path for a ghost.
+	 * @param pc Pointer to the current cell.
+	 * @param ghost Reference to the pointer to the cell representing the ghost.
+	 * @param indexGhost Index of the ghost.
+	 * @param maze 2D array representing the maze.
+	 * @param pacman Pointer to the cell representing Pacman.
+	 */
 	void RestorePathForGhost(Cell* pc, Cell*& ghost, int indexGhost, int** maze, Cell* pacman);
+
+	/**
+	 * @brief Calculates the distance between two dots.
+	 * @param x1 X-coordinate of the first dot.
+	 * @param y1 Y-coordinate of the first dot.
+	 * @param x2 X-coordinate of the second dot.
+	 * @param y2 Y-coordinate of the second dot.
+	 * @return Distance between the two dots.
+	 */
 	double GetDistanceBetweenTwoDots(int x1, int y1, int x2, int y2);
 };

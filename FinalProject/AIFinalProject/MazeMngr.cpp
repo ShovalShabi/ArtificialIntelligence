@@ -1,3 +1,7 @@
+/**
+ * @file MazeMngr.h
+ * @brief Implementation file for the Maze Manager class.
+ */
 #include "MazeMngr.h"
 #include <stdlib.h>
 #include <time.h>
@@ -9,7 +13,10 @@
 #include <algorithm>
 
 
-
+ /**
+  * @brief Constructor for the Maze Manager class.
+  * Initializes the maze with zeros.
+  */
 MazeMngr::MazeMngr()
 {
 	this->maze = new int* [MSZ];
@@ -25,6 +32,10 @@ MazeMngr::MazeMngr()
 	}
 }
 
+/**
+ * @brief Destructor for the Maze Manager class.
+ * Frees dynamically allocated memory for the maze.
+ */
 MazeMngr::~MazeMngr()
 {
 	// Free dynamically allocated memory for the maze
@@ -37,6 +48,10 @@ MazeMngr::~MazeMngr()
 	}
 }
 
+/**
+ * @brief Initializes the maze and sets up the OpenGL environment.
+ * @param gameMngr Pointer to the Game Manager instance.
+ */
 void MazeMngr::init(GameMngr* gameMngr)
 {
 	srand((unsigned int)time(NULL));
@@ -46,7 +61,11 @@ void MazeMngr::init(GameMngr* gameMngr)
 	InitMaze(gameMngr);
 }
 
-
+/**
+ * @brief Generates a unique cell in the maze.
+ * @param maze The maze grid.
+ * @return Pointer to the generated cell.
+ */
 Cell* MazeMngr::generateUniqueCell(int** maze)
 {
 	int x = rand() % MSZ;
@@ -63,6 +82,9 @@ Cell* MazeMngr::generateUniqueCell(int** maze)
 	return new Cell(x, y, nullptr);
 }
 
+/**
+ * @brief Fills the maze grid with zeros.
+ */
 void MazeMngr::fillWithZeros()
 {
 	maze = new int* [MSZ];
@@ -77,6 +99,10 @@ void MazeMngr::fillWithZeros()
 	}
 }
 
+/**
+ * @brief Initializes the maze with walls, spaces, pacman, ghosts, and coins.
+ * @param gameMngr Pointer to the Game Manager instance.
+ */
 void MazeMngr::InitMaze(GameMngr* gameMngr)
 {
 	int i, j;
@@ -147,6 +173,9 @@ void MazeMngr::InitMaze(GameMngr* gameMngr)
 	}
 }
 
+/**
+ * @brief Draws the maze using OpenGL.
+ */
 void MazeMngr::DrawMaze()
 {
 	int i, j;
@@ -194,6 +223,9 @@ void MazeMngr::DrawMaze()
 
 }
 
+/**
+ * @brief Displays the maze using OpenGL.
+ */
 void MazeMngr::display()
 {
 	glClear(GL_COLOR_BUFFER_BIT); // clean frame buffer
@@ -203,7 +235,11 @@ void MazeMngr::display()
 	glutSwapBuffers(); // show all
 }
 
-
+/**
+ * @brief Idle function for the maze manager.
+ * Controls the game loop and updates the display.
+ * @param gameMngr Pointer to the Game Manager instance.
+ */
 void MazeMngr::idle(GameMngr* gameMngr)
 {
 
@@ -216,7 +252,12 @@ void MazeMngr::idle(GameMngr* gameMngr)
 	glutPostRedisplay(); // indirect call to display
 }
 
-
+/**
+ * @brief Menu function for the maze manager.
+ * Handles menu choices.
+ * @param choice The menu choice.
+ * @param gameMngr Pointer to the Game Manager instance.
+ */
 void MazeMngr::menu(int choice, GameMngr* gameMngr)
 {
 	switch (choice)

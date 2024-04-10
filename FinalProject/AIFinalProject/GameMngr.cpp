@@ -7,7 +7,11 @@
 #include <math.h>
 
 
-
+/**
+ * Constructor for the GameMngr class.
+ * Initializes various member variables of the GameMngr class.
+ * @param numCoins An integer indicating the number of coins in the game.
+ */
 GameMngr::GameMngr(int numCoins)
 {
 	this->currentState = new PacmanCollectCoinsState();
@@ -32,7 +36,10 @@ GameMngr::GameMngr(int numCoins)
 	this->ghostsList = vector<Cell*>();
 }
 
-// Destructor to release resources
+/**
+ * Destructor for the GameMngr class.
+ * Deallocates memory for dynamically allocated resources such as currentState, pacmanGrays, ghostsList, ghostCellStartPos, and listOfPriorityQueues.
+ */
 GameMngr::~GameMngr() {
 	// Deallocate memory for currentState
 	delete currentState;
@@ -64,7 +71,10 @@ GameMngr::~GameMngr() {
 	std::cout << "All resources released." << std::endl;
 }
 
-
+/**
+ * Updates the maze representation with the current state of the game.
+ * @param maze A 2D array representing the maze grid.
+ */
 void GameMngr::updateMaze(int** maze) {
 	for (int i = 1; i < MSZ - 1; i++)
 	{
@@ -87,6 +97,10 @@ void GameMngr::updateMaze(int** maze) {
 	maze[pacman->getRow()][pacman->getColumn()] = PACMAN;
 }
 
+/**
+ * Executes a single iteration of the Pacman game loop.
+ * @param maze A 2D array representing the maze grid.
+ */
 void GameMngr::runPacmanGame(int** maze)
 {
 	if (runPackman)
@@ -108,6 +122,13 @@ void GameMngr::runPacmanGame(int** maze)
 	}
 }
 
+/**
+ * Handles the Pacman's movement and behavior during each iteration of the game loop.
+ * @param pacman Pointer to the Pacman's current cell.
+ * @param maze A 2D array representing the maze grid.
+ * @param ghostsList A vector containing pointers to the ghost cells.
+ * @param pacmanGrays A vector containing pointers to cells marked as gray during Pacman's pathfinding.
+ */
 void GameMngr::pacmanIteration(Cell* pacman, int** maze, vector<Cell*> ghostsList, vector<Cell*>& pacmanGrays)
 {
 
@@ -193,7 +214,12 @@ void GameMngr::pacmanIteration(Cell* pacman, int** maze, vector<Cell*> ghostsLis
 	}
 }
 
-
+/**
+ * Handles the collection of a coin by Pacman.
+ * @param r Row index of the coin.
+ * @param c Column index of the coin.
+ * @param maze A 2D array representing the maze grid.
+ */
 void GameMngr::collectCoin(int r, int c, int** maze)
 {
 	int i = 0;
@@ -211,6 +237,14 @@ void GameMngr::collectCoin(int r, int c, int** maze)
 	}
 }
 
+/**
+ * Runs the Breadth-First Search (BFS) algorithm to find the shortest path for Pacman to collect coins.
+ * @param pacman Pointer to the Pacman's current cell.
+ * @param maze A 2D array representing the maze grid.
+ * @param pacmanGrays A vector containing pointers to cells marked as gray during Pacman's pathfinding.
+ * @param packmanNeedToCollectCoins Pointer to a boolean flag indicating whether Pacman needs to collect coins.
+ * @param runPackman Pointer to a boolean flag indicating whether the Pacman game loop should continue running.
+ */
 void GameMngr::RunPacmanBFS(Cell* pacman, int** maze, vector<Cell*>& pacmanGrays, bool* packmanNeedToCollectCoins, bool* runPackman)
 {
 	pacmanGrays.push_back(pacman);
@@ -255,6 +289,12 @@ void GameMngr::RunPacmanBFS(Cell* pacman, int** maze, vector<Cell*>& pacmanGrays
 	}
 }
 
+/**
+ * Restores the path for Pacman to continue moving towards the next coin.
+ * @param pc Pointer to the current cell being processed in the path restoration.
+ * @param pacman Pointer to the Pacman's current cell.
+ * @param maze A 2D array representing the maze grid.
+ */
 void GameMngr::RestorePacmanPath(Cell* pc, Cell* pacman, int** maze)
 {
 	double distanceBetweenPacmanToPc = GetDistanceBetweenTwoDots(pc->getRow(), pc->getColumn(), pacman->getRow(), pacman->getColumn());
@@ -274,7 +314,14 @@ void GameMngr::RestorePacmanPath(Cell* pc, Cell* pacman, int** maze)
 	updateMaze(maze);
 }
 
-
+/**
+ * Checks the neighboring cell for Pacman during pathfinding.
+ * @param row Row index of the neighboring cell.
+ * @param column Column index of the neighboring cell.
+ * @param pcurrent Pointer to the current cell being processed in the pathfinding.
+ * @param pacman Pointer to the Pacman's current cell.
+ * @param maze A 2D array representing the maze grid.
+ */
 void GameMngr::CheckPacmanNeighbor(int row, int column, Cell* pcurrent, Cell* pacman, int** maze)
 {
 	if (maze[row][column] == COIN) // if pacman found a coin to path -> move one step forward to it
@@ -290,7 +337,12 @@ void GameMngr::CheckPacmanNeighbor(int row, int column, Cell* pcurrent, Cell* pa
 	}
 }
 
-
+/**
+ * Makes Pacman run away from a ghost by determining the best direction to move.
+ * @param pacman Pointer to the Pacman's current cell.
+ * @param ghost Pointer to the ghost's current cell.
+ * @param maze A 2D array representing the maze grid.
+ */
 void GameMngr::PacmanRunAwayGhost(Cell* pacman, Cell* ghost, int** maze)
 {
 	int pacRow = pacman->getRow(), pacCol = pacman->getColumn();
@@ -330,7 +382,11 @@ void GameMngr::PacmanRunAwayGhost(Cell* pacman, Cell* ghost, int** maze)
 	}
 }
 
-
+/**
+ * Iterates over the ghosts' movement and behavior during each iteration of the game loop.
+ * @param pacman Pointer to the Pacman's current cell.
+ * @param maze A 2D array representing the maze grid.
+ */
 void GameMngr::GhostsIteration(Cell* pacman, int** maze)
 {
 	for (int i = 0; i < NUM_GHOSTS; i++)
@@ -358,6 +414,12 @@ void GameMngr::GhostsIteration(Cell* pacman, int** maze)
 	}
 }
 
+/**
+ * Iterates over the movement of a specific ghost.
+ * @param indexGhost Index of the ghost being processed.
+ * @param pacman Pointer to the Pacman's current cell.
+ * @param maze A 2D array representing the maze grid.
+ */
 void GameMngr::GhostIteration(int indexGhost, Cell* pacman, int** maze)
 {
 	if (ghostFoundPathList[indexGhost]) // if the ghost have path to pacman using A* algorithm
@@ -398,6 +460,16 @@ void GameMngr::GhostIteration(int indexGhost, Cell* pacman, int** maze)
 	}
 }
 
+/**
+ * Checks the neighboring cell for a ghost during its movement.
+ * @param row Row index of the neighboring cell.
+ * @param column Column index of the neighboring cell.
+ * @param pcurrent Pointer to the current cell being processed in the ghost's movement.
+ * @param ghost Pointer to the ghost's current cell.
+ * @param indexGhost Index of the ghost being processed.
+ * @param pacman Pointer to the Pacman's current cell.
+ * @param maze A 2D array representing the maze grid.
+ */
 void GameMngr::CheckNeighborForGhost(int row, int column, Cell* pcurrent, Cell*& ghost, int indexGhost, Cell* pacman, int** maze)
 {
 	if (maze[row][column] == PACMAN) // if found root to the pacman -> restore path to WHITE and move the monster 3 step
@@ -416,6 +488,14 @@ void GameMngr::CheckNeighborForGhost(int row, int column, Cell* pcurrent, Cell*&
 	}
 }
 
+/**
+ * Restores the path for a ghost to continue moving towards Pacman.
+ * @param pc Pointer to the current cell being processed in the path restoration.
+ * @param ghost Pointer to the ghost's current cell.
+ * @param indexGhost Index of the ghost being processed.
+ * @param maze A 2D array representing the maze grid.
+ * @param pacman Pointer to the Pacman's current cell.
+ */
 void GameMngr::RestorePathForGhost(Cell* pc, Cell*& ghost, int indexGhost, int** maze, Cell* pacman)
 {
 	while (pc->getParent() != ghost) // all path return to be SPACE instead of gray
@@ -440,7 +520,15 @@ void GameMngr::RestorePathForGhost(Cell* pc, Cell*& ghost, int indexGhost, int**
 	updateMaze(maze);
 }
 
-// get distance between two dots
+/**
+ * Calculates the Euclidean distance between two points.
+ * @param x1 X-coordinate of the first point.
+ * @param y1 Y-coordinate of the first point.
+ * @param x2 X-coordinate of the second point.
+ * @param y2 Y-coordinate of the second point.
+ * @return The Euclidean distance between the two points.
+ */
+
 double GameMngr::GetDistanceBetweenTwoDots(int x1, int y1, int x2, int y2)
 {
 	return abs(sqrt(pow(x1 - x2, 2) + pow(y1 - y2, 2)));
