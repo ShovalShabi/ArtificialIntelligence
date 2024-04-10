@@ -128,13 +128,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\..\..\Downloads\FSM\Graphics\Graphics\freeglut.h" />
-    <ClInclude Include="..\..\..\..\..\Downloads\FSM\Graphics\Graphics\freeglut_ext.h" />
-    <ClInclude Include="..\..\..\..\..\Downloads\FSM\Graphics\Graphics\freeglut_std.h" />
-    <ClInclude Include="..\..\..\..\..\Downloads\FSM\Graphics\Graphics\glew.h" />
-    <ClInclude Include="..\..\..\..\..\Downloads\FSM\Graphics\Graphics\glxew.h" />
-    <ClInclude Include="..\..\..\..\..\Downloads\FSM\Graphics\Graphics\wglew.h" />
-    <ClInclude Include="..\..\..\..\..\Downloads\SaarGamzo_HW3\HW3_Pacman_SaarGamzo\Graphics\Graphics\glut.h" />
+    <ClInclude Include="freeglut.h" />
+    <ClInclude Include="freeglut_ext.h" />
+    <ClInclude Include="freeglut_std.h" />
+    <ClInclude Include="glew.h" />
+    <ClInclude Include="glxew.h" />
+    <ClInclude Include="wglew.h" />
+    <ClInclude Include="glut.h" />
     <ClInclude Include="Cell.h" />
     <ClInclude Include="CompareCellsWithDistance.h" />
     <ClInclude Include="GameMngr.h" />
@@ -158,9 +158,9 @@
     <ClCompile Include="PacmanWonState.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <Library Include="..\..\..\..\..\Downloads\FSM\Graphics\Graphics\freeglut.lib" />
-    <Library Include="..\..\..\..\..\Downloads\FSM\Graphics\Graphics\glew32.lib" />
-    <Library Include="..\..\..\..\..\Downloads\FSM\Graphics\Graphics\glew32s.lib" />
+    <Library Include="freeglut.lib" />
+    <Library Include="glew32.lib" />
+    <Library Include="glew32s.lib" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
