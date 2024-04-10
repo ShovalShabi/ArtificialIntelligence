@@ -134,9 +134,9 @@
     <ClInclude Include="..\..\..\..\..\Downloads\FSM\Graphics\Graphics\glew.h" />
     <ClInclude Include="..\..\..\..\..\Downloads\FSM\Graphics\Graphics\glxew.h" />
     <ClInclude Include="..\..\..\..\..\Downloads\FSM\Graphics\Graphics\wglew.h" />
-    <ClInclude Include="..\..\..\..\..\Downloads\SaarGamzo_HW3\HW3_Pacman_SaarGamzo\Graphics\Graphics\CompareCellsWithDistance.h" />
     <ClInclude Include="..\..\..\..\..\Downloads\SaarGamzo_HW3\HW3_Pacman_SaarGamzo\Graphics\Graphics\glut.h" />
     <ClInclude Include="Cell.h" />
+    <ClInclude Include="CompareCellsWithDistance.h" />
     <ClInclude Include="GameMngr.h" />
     <ClInclude Include="GeneralConsts.h" />
     <ClInclude Include="MazeMngr.h" />
@@ -147,8 +147,8 @@
     <ClInclude Include="State.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\..\..\Downloads\SaarGamzo_HW3\HW3_Pacman_SaarGamzo\Graphics\Graphics\CompareCellsWithDistance.cpp" />
     <ClCompile Include="Cell.cpp" />
+    <ClCompile Include="CompareCellsWithDistance.cpp" />
     <ClCompile Include="GameMngr.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MazeMngr.cpp" />
