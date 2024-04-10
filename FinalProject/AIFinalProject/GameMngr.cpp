@@ -10,8 +10,8 @@
 
 GameMngr::GameMngr(int numCoins)
 {
-	this->MonstersTurn = true;
-	this->PacmanTurn = false;
+	this->currentState = new PacmanCollectCoinsState();
+	this->currentState->OnEnter(this);
 
 	this->pacman = nullptr;
 	this->coins = vector<Cell*>(); // all coins
@@ -22,8 +22,6 @@ GameMngr::GameMngr(int numCoins)
 	this->coinsCounter = 0;
 	this->packmanNeedToCollectCoins = true;
 	this->packmanRunFromGhosts = false;
-	this->currentState = new PacmanCollectCoinsState();
-	this->currentState->OnEnter(this);
 
 	this->pacmanGrays = vector<Cell*>();
 	this->listOfPriorityQueues = vector<priority_queue<Cell*, vector<Cell*>, CompareCellsWithDistance>>();
@@ -33,6 +31,39 @@ GameMngr::GameMngr(int numCoins)
 	this->ghostCellStartPos = vector<Cell*>();
 	this->ghostsList = vector<Cell*>();
 }
+
+// Destructor to release resources
+GameMngr::~GameMngr() {
+	// Deallocate memory for currentState
+	delete currentState;
+
+	// Deallocate memory for pacmanGrays
+	for (auto gray : pacmanGrays) {
+		delete gray;
+	}
+
+	// Deallocate memory for ghostsList
+	for (auto ghost : ghostsList) {
+		delete ghost;
+	}
+
+	// Deallocate memory for ghostCellStartPos
+	for (auto startPos : ghostCellStartPos) {
+		delete startPos;
+	}
+
+	// Deallocate memory for priority_queues in listOfPriorityQueues
+	for (auto& pq : listOfPriorityQueues) {
+		while (!pq.empty()) {
+			delete pq.top();
+			pq.pop();
+		}
+	}
+
+	// Print message indicating resources released
+	std::cout << "All resources released." << std::endl;
+}
+
 
 void GameMngr::updateMaze(int** maze) {
 	for (int i = 1; i < MSZ - 1; i++)
@@ -69,7 +100,6 @@ void GameMngr::runPacmanGame(int** maze)
 		{
 			cout << "Pacman collected all the coins! Pacman won!\n";
 			currentState->Transition(this, new PacmanWonState());
-			//runPackman = false;
 		}
 	}
 	else
@@ -83,14 +113,14 @@ void GameMngr::pacmanIteration(Cell* pacman, int** maze, vector<Cell*> ghostsLis
 
 	vector<double> distances;
 	double minDistance = MSZ + 1;
-	for (int i = 0; i < NUMGHOSTS; i++)
+	for (int i = 0; i < NUM_GHOSTS; i++)
 	{
 		distances.push_back(GetDistanceBetweenTwoDots(ghostsList[i]->getRow(), ghostsList[i]->getColumn(), pacman->getRow(), pacman->getColumn()));
 	}
 
 	int indexClosestGhost = 0;
 
-	for (int i = 0; i < NUMGHOSTS; i++)
+	for (int i = 0; i < NUM_GHOSTS; i++)
 	{
 		if (distances[i] < minDistance)
 		{
@@ -103,10 +133,7 @@ void GameMngr::pacmanIteration(Cell* pacman, int** maze, vector<Cell*> ghostsLis
 	{
 		PacmanRunAwayGhost(pacman, ghostsList[indexClosestGhost], maze);
 		updateMaze(maze);
-		MonstersTurn = true;
-		PacmanTurn = false;
 		currentState->Transition(this, new PacmanRunFromGhostsState());
-		//return; // move one step away and finish turn
 	}
 	else
 		currentState->Transition(this, new PacmanCollectCoinsState());
@@ -126,8 +153,6 @@ void GameMngr::pacmanIteration(Cell* pacman, int** maze, vector<Cell*> ghostsLis
 			pacman->setColumn(pacC);
 			maze[pacR + 1][pacC] = PACMAN;
 			updateMaze(maze);
-			MonstersTurn = true;
-			PacmanTurn = false;
 			return;
 		}
 		// check if coin is down step down from pacman
@@ -139,8 +164,6 @@ void GameMngr::pacmanIteration(Cell* pacman, int** maze, vector<Cell*> ghostsLis
 			pacman->setColumn(pacC);
 			maze[pacR - 1][pacC] = PACMAN;
 			updateMaze(maze);
-			MonstersTurn = true;
-			PacmanTurn = false;
 			return;
 		}
 		// check if coin is one step right from pacman
@@ -152,8 +175,6 @@ void GameMngr::pacmanIteration(Cell* pacman, int** maze, vector<Cell*> ghostsLis
 			pacman->setColumn(pacC + 1);
 			maze[pacR][pacC + 1] = PACMAN;
 			updateMaze(maze);
-			MonstersTurn = true;
-			PacmanTurn = false;
 			return;
 		}
 		// check if coin is one step left from pacman
@@ -165,16 +186,10 @@ void GameMngr::pacmanIteration(Cell* pacman, int** maze, vector<Cell*> ghostsLis
 			pacman->setColumn(pacC - 1);
 			maze[pacR][pacC - 1] = PACMAN;
 			updateMaze(maze);
-			MonstersTurn = true;
-			PacmanTurn = false;
 			return;
 		}
 		// if coins are further than 1 step - start BFS & move one step to first coin pacman found:
-		//packmanNeedToCollectCoins = true;
 		RunPacmanBFS(pacman, maze, pacmanGrays, &packmanNeedToCollectCoins, &runPackman);
-
-		MonstersTurn = true;
-		PacmanTurn = false;
 	}
 }
 
@@ -213,7 +228,6 @@ void GameMngr::RunPacmanBFS(Cell* pacman, int** maze, vector<Cell*>& pacmanGrays
 				updateMaze(maze);
 				maze[pacman->getRow()][pacman->getColumn()] = PACMAN;
 				currentState->Transition(this, new PacmanStuckState());
-				//return;
 			}
 			else // grays is not empty
 			{
@@ -319,7 +333,7 @@ void GameMngr::PacmanRunAwayGhost(Cell* pacman, Cell* ghost, int** maze)
 
 void GameMngr::GhostsIteration(Cell* pacman, int** maze)
 {
-	for (int i = 0; i < NUMGHOSTS; i++)
+	for (int i = 0; i < NUM_GHOSTS; i++)
 	{
 		if (ghostFoundPathList[i])// The game is still relevant
 		{
@@ -331,20 +345,17 @@ void GameMngr::GhostsIteration(Cell* pacman, int** maze)
 			}
 			else
 			{
-				cout << "Monster " << i << " got pacman, GAME OVER!.\n";
+				cout << "Ghost " << i << " got pacman, GAME OVER!\n";
 				currentState->Transition(this, new PacmanStuckState());
-				//runPackman = false;
 			}
 		}
 		else
 		{
+			//The ghost got stuck so it won't move anymore
 			ghostStuckList[i] = true;
 			ghostFoundPathList[i] = false;
 		}
 	}
-
-	MonstersTurn = false;
-	PacmanTurn = true;
 }
 
 void GameMngr::GhostIteration(int indexGhost, Cell* pacman, int** maze)

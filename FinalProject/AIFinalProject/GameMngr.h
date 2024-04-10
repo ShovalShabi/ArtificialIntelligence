@@ -14,8 +14,6 @@ class GameMngr
 {
 private:
 	State* currentState;
-	bool MonstersTurn;
-	bool PacmanTurn;
 
 	Cell* pacman;
 	vector<Cell*> coins; // all coins
@@ -38,8 +36,6 @@ private:
 public:
 	// Getters
 	State* getCurrentState() const { return currentState; }
-	bool getMonstersTurn() const { return MonstersTurn; }
-	bool getPacmanTurn() const { return PacmanTurn; }
 	Cell* getPacman() const { return pacman; }
 	vector<Cell*>& getCoins() { return coins; }
 	bool getRunPackman() const { return runPackman; }
@@ -57,8 +53,6 @@ public:
 
 	// Setters
 	void setCurrentState(State* value) { currentState = value; }
-	void setMonstersTurn(bool value) { MonstersTurn = value; }
-	void setPacmanTurn(bool value) { PacmanTurn = value; }
 	void setPacman(Cell* p) { pacman = p; }
 	void setCoins(const vector<Cell*>& c) { coins = c; }
 	void setRunPackman(bool value) { runPackman = value; }
@@ -76,6 +70,7 @@ public:
 
 	//Actual Functions
 	GameMngr(int numCoins);
+	~GameMngr();
 	void RestorePacmanPath(Cell* pc, Cell* pacman, int** maze);
 	void CheckPacmanNeighbor(int row, int column, Cell* pcurrent, Cell* pacman, int** maze);
 	void updateMaze(int** maze);

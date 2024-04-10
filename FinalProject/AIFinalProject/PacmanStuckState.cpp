@@ -8,10 +8,10 @@ void PacmanStuckState::OnEnter(GameMngr* gameMngr)
 
 void PacmanStuckState::Transition(GameMngr* gameMngr, State* anotherState)
 {
-	//Non, pacman has lost hte game
+	//Non, pacman has lost the game
 }
 
 void PacmanStuckState::OnExit(GameMngr* gameMngr)
 {
-	//Non, pacman has lost hte game
+	//Non, pacman has lost the game
 }

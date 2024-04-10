@@ -105,7 +105,7 @@ void MazeMngr::InitMaze(GameMngr* gameMngr)
 	cout << "Pacman location is [" << x << "][" << y << "]\n";
 
 	//Initialization of the ghosts patameters
-	for (int i = 0; i < NUMGHOSTS; i++)
+	for (int i = 0; i < NUM_GHOSTS; i++)
 	{
 		Cell* ghost = generateUniqueCell(maze);
 
@@ -150,12 +150,6 @@ void MazeMngr::DrawMaze()
 			case WALL:
 				glColor3d(0.3, 0.3, 0.3); // dark gray
 				break;
-			case START:
-				glColor3d(0.5, 0.5, 0.9); // blue
-				break;
-			case TARGET:
-				glColor3d(0, 1, 0); // green
-				break;
 			case BLACK:
 				//glColor3d(0.9, 0.9, 0.9); // light gray
 				glColor3d(0, 0, 0); // light gray
@@ -174,9 +168,6 @@ void MazeMngr::DrawMaze()
 				break;
 			case COIN:
 				glColor3d(1, 1, 0);// set color yellow
-				break;
-			case TEMPPACMAN:
-				glColor3d(0.9, 0.9, 0.9); // light gray
 				break;
 
 			}

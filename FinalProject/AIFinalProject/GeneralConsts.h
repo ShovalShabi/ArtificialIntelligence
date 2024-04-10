@@ -5,15 +5,12 @@
 #define NUM_OF_COINS 5
 #define SPACE 0
 #define WALL 1
-#define START 2
-#define TARGET 3
 #define BLACK 4
 #define GRAY 5
 #define PATH 6
 #define COIN 7
 #define PACMAN 8
 #define GHOST 9
-#define TEMPPACMAN 10
-#define NUMGHOSTS 3
-#define PROXIMITY 3
-#define GRAY_PACMAN 11
+#define NUM_GHOSTS 3
+#define PROXIMITY 3  // The number of Squares that Pacman have to keep distance from ghosts (including walls)
+#define GRAY_PACMAN 11 //Defining another mark for the pacman gray cells
