@@ -25,6 +25,18 @@ MazeMngr::MazeMngr()
 	}
 }
 
+MazeMngr::~MazeMngr()
+{
+	// Free dynamically allocated memory for the maze
+	if (maze != nullptr) {
+		for (int i = 0; i < MSZ; ++i) {
+			delete[] maze[i];
+		}
+		delete[] maze;
+		maze = nullptr;
+	}
+}
+
 void MazeMngr::init(GameMngr* gameMngr)
 {
 	srand((unsigned int)time(NULL));

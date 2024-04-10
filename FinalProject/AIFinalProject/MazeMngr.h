@@ -9,6 +9,7 @@ private:
 
 public:
     MazeMngr();
+    ~MazeMngr();
     void init(GameMngr* gameMngr);
     Cell* generateUniqueCell(int** maze);
     void fillWithZeros();
