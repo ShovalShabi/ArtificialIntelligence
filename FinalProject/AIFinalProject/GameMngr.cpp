@@ -131,12 +131,15 @@ void GameMngr::runPacmanGame(int** maze)
  */
 void GameMngr::pacmanIteration(Cell* pacman, int** maze, vector<Cell*> ghostsList, vector<Cell*>& pacmanGrays)
 {
-
+	currentState->Transition(this, new PacmanCollectCoinsState());
 	vector<double> distances;
 	double minDistance = MSZ + 1;
 	for (int i = 0; i < NUM_GHOSTS; i++)
 	{
-		distances.push_back(GetDistanceBetweenTwoDots(ghostsList[i]->getRow(), ghostsList[i]->getColumn(), pacman->getRow(), pacman->getColumn()));
+		if (!ghostStuckList[i])
+			distances.push_back(GetDistanceBetweenTwoDots(ghostsList[i]->getRow(), ghostsList[i]->getColumn(), pacman->getRow(), pacman->getColumn()));
+		else
+			distances.push_back((double)MSZ);// The ghost is stuck so there is no need to calculate the distance to it
 	}
 
 	int indexClosestGhost = 0;
@@ -161,7 +164,7 @@ void GameMngr::pacmanIteration(Cell* pacman, int** maze, vector<Cell*> ghostsLis
 
 	if (packmanNeedToCollectCoins)
 	{
-		// if getting here- there are no monsters close & pacman can chase coins
+		// if getting here- there are no ghosts nearby & pacman can chase coins
 		// check if pacman found a coin next to him:
 		int pacR = pacman->getRow(), pacC = pacman->getColumn();
 		// check if coin is one step up from pacman
@@ -273,16 +276,16 @@ void GameMngr::RunPacmanBFS(Cell* pacman, int** maze, vector<Cell*>& pacmanGrays
 				// add all white neighbors of pcurrent to grays
 				// Pacman ignores the GRAY mark of the ghosts and continues to explore path
 				// UP
-				if (*packmanNeedToCollectCoins && (maze[r + 1][c] == SPACE || maze[r + 1][c] == COIN || maze[r + 1][c] == GRAY || maze[r + 1][c] == GHOST))
+				if (*packmanNeedToCollectCoins && (maze[r + 1][c] == SPACE || maze[r + 1][c] == COIN || maze[r + 1][c] == GRAY || maze[r + 1][c] == GHOST && r != pacman->getRow() && c != pacman->getColumn()))
 					CheckPacmanNeighbor(r + 1, c, pcurrent, pacman, maze);
 				// DOWN
-				if (*packmanNeedToCollectCoins && (maze[r - 1][c] == SPACE || maze[r - 1][c] == COIN || maze[r - 1][c] == GRAY || maze[r - 1][c] == GHOST))
+				if (*packmanNeedToCollectCoins && (maze[r - 1][c] == SPACE || maze[r - 1][c] == COIN || maze[r - 1][c] == GRAY || maze[r - 1][c] == GHOST && r != pacman->getRow() && c != pacman->getColumn()))
 					CheckPacmanNeighbor(r - 1, c, pcurrent, pacman, maze);
 				// LEFT
-				if (*packmanNeedToCollectCoins && (maze[r][c - 1] == SPACE || maze[r][c - 1] == COIN || maze[r][c - 1] == GRAY || maze[r][c - 1] == GHOST))
+				if (*packmanNeedToCollectCoins && (maze[r][c - 1] == SPACE || maze[r][c - 1] == COIN || maze[r][c - 1] == GRAY || maze[r][c - 1] == GHOST && r != pacman->getRow() && c != pacman->getColumn()))
 					CheckPacmanNeighbor(r, c - 1, pcurrent, pacman, maze);
 				// RIGHT
-				if (*packmanNeedToCollectCoins && (maze[r][c + 1] == SPACE || maze[r][c + 1] == COIN || maze[r][c + 1] == GRAY || maze[r][c + 1] == GHOST))
+				if (*packmanNeedToCollectCoins && (maze[r][c + 1] == SPACE || maze[r][c + 1] == COIN || maze[r][c + 1] == GRAY || maze[r][c + 1] == GHOST && r != pacman->getRow() && c != pacman->getColumn()))
 					CheckPacmanNeighbor(r, c + 1, pcurrent, pacman, maze);
 			}
 		}
@@ -350,25 +353,38 @@ void GameMngr::PacmanRunAwayGhost(Cell* pacman, Cell* ghost, int** maze)
 
 	// check which direction is the best for pacman to run away in one step away
 	vector<Cell*> cellPointers = {
-		new Cell(pacRow + 1,pacCol,nullptr),
-		new Cell(pacRow - 1,pacCol,nullptr),
-		new Cell(pacRow,pacCol + 1,nullptr),
-		new Cell(pacRow,pacCol - 1,nullptr) };
+		new Cell(pacRow + 1,pacCol,nullptr), // UP
+		new Cell(pacRow - 1,pacCol,nullptr), //DOWN
+		new Cell(pacRow,pacCol + 1,nullptr), // RIGHT
+		new Cell(pacRow,pacCol - 1,nullptr) }; //LEFT
 
+	vector<double> distances = vector<double>(4);// Four directions fo checking, -1 is to assuming that pacman is trapped
 	double maxDistance = -1;
 	int maxDistIndex = 0;
 	for (int i = 0; i < (int)cellPointers.size(); i++)
 	{
 		double tempDist = GetDistanceBetweenTwoDots(cellPointers[i]->getRow(), cellPointers[i]->getColumn(), ghostRow, ghostCol);
-		if (tempDist >= maxDistance)
+
+		if (maze[cellPointers[i]->getRow()][cellPointers[i]->getColumn()] == WALL ||
+				maze[cellPointers[i]->getRow()][cellPointers[i]->getColumn()] == GHOST)
 		{
-			maxDistance = tempDist;
-			maxDistIndex = i;
+			if (distances[i] != -1)
+				continue;
+
+			distances[i] = -1;
+			i = 0;// Recalculating the optimal distance all over again
+		}
+		else		
+		{
+			if (tempDist >= maxDistance)
+			{
+				maxDistIndex = i;
+				maxDistance = tempDist;
+			}
+
+			distances[i] = tempDist;
 		}
 	}
-	if (maze[cellPointers[maxDistIndex]->getRow()][cellPointers[maxDistIndex]->getColumn()] == WALL ||
-		maze[cellPointers[maxDistIndex]->getRow()][cellPointers[maxDistIndex]->getColumn()] == GHOST)// in case of another ghost appears
-		return;
 
 	if (maze[cellPointers[maxDistIndex]->getRow()][cellPointers[maxDistIndex]->getColumn()] == SPACE ||
 		maze[cellPointers[maxDistIndex]->getRow()][cellPointers[maxDistIndex]->getColumn()] == COIN ||
@@ -394,7 +410,7 @@ void GameMngr::GhostsIteration(Cell* pacman, int** maze)
 		if (ghostFoundPathList[i])// The game is still relevant
 		{
 			double distance = GetDistanceBetweenTwoDots(ghostsList[i]->getRow(), ghostsList[i]->getColumn(), pacman->getRow(), pacman->getColumn());
-			if (distance > 1)
+			if (distance > 1.5)
 			{
 				ghostNeedToMoveList[i] = true;
 				GhostIteration(i, pacman, maze);
@@ -472,7 +488,7 @@ void GameMngr::GhostIteration(int indexGhost, Cell* pacman, int** maze)
  */
 void GameMngr::CheckNeighborForGhost(int row, int column, Cell* pcurrent, Cell*& ghost, int indexGhost, Cell* pacman, int** maze)
 {
-	if (maze[row][column] == PACMAN) // if found root to the pacman -> restore path to WHITE and move the monster 3 step
+	if (maze[row][column] == PACMAN) // if found root to the pacman -> restore path to WHITE and move the ghost 1 step
 	{
 		RestorePathForGhost(pcurrent, ghost, indexGhost, maze, pacman); // move one step
 		return;
@@ -502,7 +518,7 @@ void GameMngr::RestorePathForGhost(Cell* pc, Cell*& ghost, int indexGhost, int**
 	{
 		pc = pc->getParent();
 	}
-	maze[ghost->getRow()][ghost->getColumn()] = SPACE; // remove old location of monster3
+	maze[ghost->getRow()][ghost->getColumn()] = SPACE; // remove old location of the ghost
 	double distanceToPacMan = GetDistanceBetweenTwoDots(pc->getRow(), pc->getColumn(), pacman->getRow(), pacman->getColumn());
 	ghost = pc;
 	ghost->setRow(pc->getRow());
