@@ -410,7 +410,7 @@ void GameMngr::GhostsIteration(Cell* pacman, int** maze)
 		if (ghostFoundPathList[i])// The game is still relevant
 		{
 			double distance = GetDistanceBetweenTwoDots(ghostsList[i]->getRow(), ghostsList[i]->getColumn(), pacman->getRow(), pacman->getColumn());
-			if (distance > 1.5)
+			if (distance > 1.5)// The ghost has touched pacman (valid only on MSZ 25)
 			{
 				ghostNeedToMoveList[i] = true;
 				GhostIteration(i, pacman, maze);
